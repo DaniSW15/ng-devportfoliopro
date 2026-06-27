@@ -1,0 +1,206 @@
+src/
+├── app/
+│   ├── core/                          # Núcleo de la aplicación (singletons)
+│   │   ├── domain/                    # ENTIDADES Y REGLAS DE NEGOCIO (sin dependencias externas)
+│   │   │   ├── entities/              # Entidades de dominio puras
+│   │   │   │   ├── user.entity.ts
+│   │   │   │   ├── api-key.entity.ts
+│   │   │   │   ├── snippet.entity.ts
+│   │   │   │   └── tool.entity.ts
+│   │   │   ├── value-objects/         # Value Objects (inmutables)
+│   │   │   │   ├── email.vo.ts
+│   │   │   │   ├── password.vo.ts
+│   │   │   │   └── timestamp.vo.ts
+│   │   │   ├── repositories/          # INTERFACES (PUERTOS) - definen qué necesita el dominio
+│   │   │   │   ├── user.repository.interface.ts
+│   │   │   │   ├── api-key.repository.interface.ts
+│   │   │   │   └── snippet.repository.interface.ts
+│   │   │   └── services/              # SERVICIOS DE DOMINIO (lógica pura)
+│   │   │       ├── password-generator.domain-service.ts
+│   │   │       ├── jwt-validator.domain-service.ts
+│   │   │       └── rate-limiter.domain-service.ts
+│   │   │
+│   │   ├── application/               # CASOS DE USO (orquestan el dominio)
+│   │   │   ├── use-cases/
+│   │   │   │   ├── auth/
+│   │   │   │   │   ├── login.use-case.ts
+│   │   │   │   │   ├── register.use-case.ts
+│   │   │   │   │   └── refresh-token.use-case.ts
+│   │   │   │   ├── tools/
+│   │   │   │   │   ├── generate-password.use-case.ts
+│   │   │   │   │   ├── decode-jwt.use-case.ts
+│   │   │   │   │   └── format-json.use-case.ts
+│   │   │   │   ├── snippets/
+│   │   │   │   │   ├── create-snippet.use-case.ts
+│   │   │   │   │   └── search-snippets.use-case.ts
+│   │   │   │   └── billing/
+│   │   │   │       └── create-checkout.use-case.ts
+│   │   │   ├── dto/                   # Data Transfer Objects
+│   │   │   │   ├── auth.dto.ts
+│   │   │   │   ├── tool-request.dto.ts
+│   │   │   │   └── snippet.dto.ts
+│   │   │   └── mappers/               # Mapeo entre DTOs y Entidades
+│   │   │       ├── user.mapper.ts
+│   │   │       └── snippet.mapper.ts
+│   │   │
+│   │   ├── infrastructure/            # ADAPTADORES (implementaciones concretas)
+│   │   │   ├── adapters/
+│   │   │   │   ├── http/              # Clientes HTTP
+│   │   │   │   │   ├── auth.http-adapter.ts
+│   │   │   │   │   ├── tools.http-adapter.ts
+│   │   │   │   │   └── snippets.http-adapter.ts
+│   │   │   │   ├── websocket/         # Clientes WebSocket
+│   │   │   │   │   └── websocket.adapter.ts
+│   │   │   │   ├── storage/           # LocalStorage, SessionStorage
+│   │   │   │   │   └── token-storage.adapter.ts
+│   │   │   │   └── formatters/        # Servicios externos
+│   │   │   │       ├── date-formatter.adapter.ts
+│   │   │   │       └── color-utils.adapter.ts
+│   │   │   └── repositories/          # IMPLEMENTACIONES de repositorios
+│   │   │       ├── user.repository.impl.ts
+│   │   │       ├── api-key.repository.impl.ts
+│   │   │       └── snippet.repository.impl.ts
+│   │   │
+│   │   ├── config/                    # Configuración global
+│   │   │   ├── app.config.ts
+│   │   │   ├── api.config.ts
+│   │   │   └── websocket.config.ts
+│   │   │
+│   │   ├── constants/                 # Constantes globales
+│   │   │   ├── api-routes.const.ts
+│   │   │   └── error-messages.const.ts
+│   │   │
+│   │   ├── interceptors/              # HTTP Interceptors
+│   │   │   ├── auth.interceptor.ts
+│   │   │   ├── error-handler.interceptor.ts
+│   │   │   └── rate-limit.interceptor.ts
+│   │   │
+│   │   ├── guards/                    # Guards de rutas
+│   │   │   ├── auth.guard.ts
+│   │   │   └── api-key.guard.ts
+│   │   │
+│   │   └── shared/                    # Recursos compartidos del core
+│   │       ├── pipes/
+│   │       ├── directives/
+│   │       └── validators/
+│   │
+│   ├── features/                      # MÓDULOS POR FEATURE (lazy loading)
+│   │   ├── auth/                      # Feature: Autenticación
+│   │   │   ├── auth.module.ts
+│   │   │   ├── auth.routes.ts
+│   │   │   ├── pages/                 # Páginas/Views
+│   │   │   │   ├── login-page/
+│   │   │   │   │   ├── login-page.component.ts
+│   │   │   │   │   ├── login-page.component.html
+│   │   │   │   │   └── login-page.component.scss
+│   │   │   │   └── register-page/
+│   │   │   ├── components/            # Componentes específicos
+│   │   │   │   ├── auth-form/
+│   │   │   │   └── social-login/
+│   │   │   ├── store/                 # Estado local (si usas NgRx/State)
+│   │   │   │   ├── auth.actions.ts
+│   │   │   │   ├── auth.reducer.ts
+│   │   │   │   └── auth.selectors.ts
+│   │   │   └── services/              # Servicios específicos del feature
+│   │   │       └── auth.facade.ts     # Fachada para casos de uso
+│   │   │
+│   │   ├── dashboard/                 # Feature: Dashboard
+│   │   │   ├── dashboard.module.ts
+│   │   │   ├── dashboard.routes.ts
+│   │   │   ├── pages/
+│   │   │   ├── components/
+│   │   │   └── widgets/               # Widgets del dashboard
+│   │   │       ├── api-key-usage.widget/
+│   │   │       ├── recent-snippets.widget/
+│   │   │       └── billing-summary.widget/
+│   │   │
+│   │   ├── tools/                     # Feature: Herramientas (todas)
+│   │   │   ├── tools.module.ts
+│   │   │   ├── tools.routes.ts
+│   │   │   ├── pages/
+│   │   │   │   ├── password-generator/
+│   │   │   │   ├── jwt-decoder/
+│   │   │   │   ├── json-formatter/
+│   │   │   │   ├── base64-tool/
+│   │   │   │   ├── color-palette/
+│   │   │   │   ├── timestamp-converter/
+│   │   │   │   ├── uuid-generator/
+│   │   │   │   └── qr-generator/
+│   │   │   ├── components/            # Componentes reutilizables entre tools
+│   │   │   │   ├── tool-card/
+│   │   │   │   ├── tool-container/
+│   │   │   │   └── copy-button/
+│   │   │   ├── services/
+│   │   │   │   └── tools.facade.ts
+│   │   │   └── models/                # Modelos específicos del feature
+│   │   │       └── tool-config.model.ts
+│   │   │
+│   │   ├── snippets/                  # Feature: Code Snippets
+│   │   │   ├── snippets.module.ts
+│   │   │   ├── snippets.routes.ts
+│   │   │   ├── pages/
+│   │   │   │   ├── snippet-list/
+│   │   │   │   ├── snippet-detail/
+│   │   │   │   └── snippet-editor/
+│   │   │   ├── components/
+│   │   │   │   ├── snippet-card/
+│   │   │   │   └── code-editor/
+│   │   │   ├── services/
+│   │   │   │   └── snippets.facade.ts
+│   │   │   └── store/
+│   │   │       └── snippets.state.ts
+│   │   │
+│   │   ├── billing/                   # Feature: Facturación
+│   │   │   ├── billing.module.ts
+│   │   │   ├── billing.routes.ts
+│   │   │   ├── pages/
+│   │   │   │   ├── plans-page/
+│   │   │   │   └── billing-portal/
+│   │   │   └── services/
+│   │   │       └── billing.facade.ts
+│   │   │
+│   │   └── api-keys/                  # Feature: API Keys
+│   │       ├── api-keys.module.ts
+│   │       ├── api-keys.routes.ts
+│   │       ├── pages/
+│   │       │   ├── api-key-list/
+│   │       │   └── api-key-generator/
+│   │       └── services/
+│   │           └── api-keys.facade.ts
+│   │
+│   ├── shared/                        # RECURSOS COMPARTIDOS (no core)
+│   │   ├── components/                # Componentes reutilizables
+│   │   │   ├── loading-spinner/
+│   │   │   ├── error-boundary/
+│   │   │   ├── pagination/
+│   │   │   └── search-bar/
+│   │   ├── directives/
+│   │   │   ├── click-outside.directive.ts
+│   │   │   └── tooltip.directive.ts
+│   │   ├── pipes/
+│   │   │   ├── truncate.pipe.ts
+│   │   │   └── safe-html.pipe.ts
+│   │   ├── validators/
+│   │   │   ├── password.validator.ts
+│   │   │   └── custom.validators.ts
+│   │   └── models/                    # Modelos compartidos
+│   │       └── pagination.model.ts
+│   │
+│   └── app.module.ts                  # Módulo raíz
+│
+├── environments/                      # Configuraciones de entorno
+│   ├── environment.ts
+│   ├── environment.prod.ts
+│   └── environment.staging.ts
+│
+├── assets/                           # Recursos estáticos
+│   ├── icons/
+│   ├── images/
+│   └── fonts/
+│
+├── styles/                           # Estilos globales
+│   ├── variables.scss
+│   ├── mixins.scss
+│   └── global.scss
+│
+└── main.ts
