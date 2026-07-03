@@ -1,0 +1,36 @@
+<section class="login-page">
+	<h1>Iniciar sesion</h1>
+	<p class="subtitle">Angular 21 + Signals + Hexagonal</p>
+
+	<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+		<label for="email">Email</label>
+		<input id="email" type="email" formControlName="email" placeholder="tu@email.com" />
+		@if (hasError('email', 'required')) {
+			<small class="error">El email es obligatorio.</small>
+		}
+		@if (hasError('email', 'email')) {
+			<small class="error">Formato de email invalido.</small>
+		}
+
+		<label for="password">Password</label>
+		<input id="password" type="password" formControlName="password" placeholder="********" />
+		@if (hasError('password', 'required')) {
+			<small class="error">La password es obligatoria.</small>
+		}
+		@if (hasError('password', 'minlength')) {
+			<small class="error">Minimo 8 caracteres.</small>
+		}
+
+		<button type="submit" [disabled]="authFacade.isLoading()">
+			{{ authFacade.isLoading() ? 'Ingresando...' : 'Ingresar' }}
+		</button>
+	</form>
+
+	@if (authFacade.error()) {
+		<p class="error server">{{ authFacade.error() }}</p>
+	}
+
+	@if (authFacade.isAuthenticated()) {
+		<p class="ok">Bienvenido, {{ authFacade.user()?.name }}</p>
+	}
+</section>

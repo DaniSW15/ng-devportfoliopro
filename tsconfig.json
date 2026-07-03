@@ -13,7 +13,58 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "paths": {
+      // === CORE (Hexagonal: puertos + dominio + infraestructura) ===
+      "@core/*": ["./src/app/core/*"],
+      "@core/domain": ["./src/app/core/domain"],
+      "@core/domain/entities/*": ["./src/app/core/domain/entities/*"],
+      "@core/domain/repositories/*": ["./src/app/core/domain/repositories/*"],
+      "@core/domain/services/*": ["./src/app/core/domain/services/*"],
+      "@core/domain/value-objects/*": ["./src/app/core/domain/value-objects/*"],
+
+      "@core/application": ["./src/app/core/application"],
+      "@core/application/dto/*": ["./src/app/core/application/dto/*"],
+      "@core/application/use-cases/*": ["./src/app/core/application/use-cases/*"],
+      "@core/application/mappers/*": ["./src/app/core/application/mappers/*"],
+
+      "@core/infrastructure": ["./src/app/core/infrastructure"],
+      "@core/infrastructure/adapters/*": ["./src/app/core/infrastructure/adapters/*"],
+      "@core/infrastructure/repositories/*": ["./src/app/core/infrastructure/repositories/*"],
+      "@core/infrastructure/services/*": ["./src/app/core/infrastructure/services/*"],
+
+      "@core/config/*": ["./src/app/core/config/*"],
+      "@core/constants/*": ["./src/app/core/constants/*"],
+      "@core/guards/*": ["./src/app/core/guards/*"],
+      "@core/interceptors/*": ["./src/app/core/interceptors/*"],
+      "@core/interfaces/*": ["./src/app/core/interfaces/*"],
+      "@core/shared/*": ["./src/app/core/shared/*"],
+
+      // === FEATURES (Módulos por feature: lazy loading) ===
+      "@features/*": ["./src/app/features/*"],
+      "@features/auth/*": ["./src/app/features/auth/*"],
+      "@features/dashboard/*": ["./src/app/features/dashboard/*"],
+      "@features/tools/*": ["./src/app/features/tools/*"],
+      "@features/snippets/*": ["./src/app/features/snippets/*"],
+      "@features/billing/*": ["./src/app/features/billing/*"],
+      "@features/api-keys/*": ["./src/app/features/api-keys/*"],
+
+      // === SHARED (Componentes, directivas, pipes reutilizables) ===
+      "@shared/*": ["./src/app/shared/*"],
+      "@shared/components/*": ["./src/app/shared/components/*"],
+      "@shared/directives/*": ["./src/app/shared/directives/*"],
+      "@shared/pipes/*": ["./src/app/shared/pipes/*"],
+      "@shared/validators/*": ["./src/app/shared/validators/*"],
+      "@shared/models/*": ["./src/app/shared/models/*"],
+
+      // === ENVIRONMENTS ===
+      "@environments/*": ["./src/environments/*"],
+
+      // === ASSETS ===
+      "@assets/*": ["./src/assets/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
