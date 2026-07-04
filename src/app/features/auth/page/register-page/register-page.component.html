@@ -1,1 +1,97 @@
-<p>register-page.component works!</p>
+<section class="register-container">
+    <form [formRoot]="registerForm">
+        <div class="form-header">
+            <h1>Create Account</h1>
+            <p>Join our developer portfolio community</p>
+        </div>
+
+        <!-- Success Message -->
+        @if (registerSuccess()) {
+        <p-message severity="success" text="Registration successful! Redirecting to login..."
+            [style]="{ width: '100%' }" />
+        }
+
+        <!-- Error Message -->
+        @if (registerError()) {
+        <p-message severity="error" text="Registration failed. Please try again." [style]="{ width: '100%' }" />
+        }
+
+        <!-- Email Field -->
+        <div class="form-field">
+            <label for="email" class="form-label">Email</label>
+            <p-inputGroup>
+                <input pInputText id="email" type="email" [formField]="registerForm.email"
+                    placeholder="your@email.com" class="w-full" />
+            </p-inputGroup>
+            @if (registerForm.email().invalid()) {
+            <small class="error-message">
+                @for (error of registerForm.email().errors(); track error) {
+                <span>{{ error.message }}</span>
+                }
+            </small>
+            }
+        </div>
+
+        <!-- Name Field -->
+        <div class="form-field">
+            <label for="name" class="form-label">Full Name</label>
+            <p-inputGroup>
+                <input pInputText id="name" type="text" [formField]="registerForm.name" placeholder="Your Name"
+                    class="w-full" />
+            </p-inputGroup>
+            @if (registerForm.name().invalid()) {
+            <small class="error-message">
+                @for (error of registerForm.name().errors(); track error) {
+                <span>{{ error.message }}</span>
+                }
+            </small>
+            }
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-field">
+            <label for="password" class="form-label">Password</label>
+            <p-inputGroup>
+                <input pInputText id="password" type="password" [formField]="registerForm.password"
+                    placeholder="At least 8 characters" class="w-full" />
+            </p-inputGroup>
+            @if (registerForm.password().invalid()) {
+            <small class="error-message">
+                @for (error of registerForm.password().errors(); track error) {
+                <span>{{ error.message }}</span>
+                }
+            </small>
+            }
+        </div>
+
+        <!-- GitHub Username Field -->
+        <div class="form-field">
+            <label for="githubUsername" class="form-label">GitHub Username</label>
+            <p-inputGroup>
+                <input pInputText id="githubUsername" type="text" [formField]="registerForm.githubUsername"
+                    placeholder="your-github-username" class="w-full" />
+            </p-inputGroup>
+            @if (registerForm.githubUsername().invalid()) {
+            <small class="error-message">
+                @for (error of registerForm.githubUsername().errors(); track error) {
+                <span>{{ error.message }}</span>
+                }
+            </small>
+            }
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+            <p-button label="Create Account" type="submit" [disabled]="registerForm().invalid()"
+                [loading]="authFacade.isLoading()" class="w-full" />
+        </div>
+
+        <!-- Login Link -->
+        <div class="form-footer">
+            <p>
+                Already have an account?
+                <a routerLink="/auth/login" class="link">Sign in</a>
+            </p>
+        </div>
+    </form>
+</section>

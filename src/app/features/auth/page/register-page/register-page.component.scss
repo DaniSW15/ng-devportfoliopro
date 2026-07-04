@@ -1,0 +1,107 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.register-form {
+  background: white;
+  border-radius: 8px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+  margin-bottom: 2rem;
+  text-align: center;
+
+  h1 {
+    margin: 0 0 0.5rem;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #666;
+  }
+}
+
+.form-field {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+p-inputGroup {
+  width: 100%;
+
+  input {
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+
+    &:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    &[formField].ng-invalid.ng-touched {
+      border-color: #ef4444;
+    }
+  }
+}
+
+.form-actions {
+  margin: 2rem 0 1.5rem;
+
+  p-button {
+    width: 100%;
+  }
+}
+
+.form-footer {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #666;
+
+  a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+::ng-deep {
+  .p-inputgroup input {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .p-message {
+    margin-bottom: 1rem !important;
+  }
+}

@@ -1,5 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { SnippetDto, SnippetResultDto } from "@core/application/dto/snippet.dto";
+import { SnippetMapper } from "@core/application/mappers/snippet.mapper";
 import { ISnippetRepository } from "@core/domain/repositories/snippet.repositories.interface";
 
 @Injectable({
@@ -10,17 +11,6 @@ export class CreateSnippetUseCase {
 
     async create(payload: SnippetDto): Promise<SnippetResultDto> {
         const result = await this.snippetRepository.postSnippet(payload);
-        return {
-            id: result.id,
-            title: result.title,
-            content: result.content,
-            description: result.description || '',
-            language: result.language,
-            isPublic: result.isPublic,
-            tags: result.tags,
-            createdAt: result.createdAt.toISOString(),
-            updatedAt: result.updatedAt.toISOString(),
-            userId: result.user,
-        };
+        return SnippetMapper.toResultDto(result);
     }
 }
