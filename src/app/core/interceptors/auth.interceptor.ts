@@ -17,12 +17,15 @@ function isPublicRoute(url: string): boolean {
  *
  * Se excluyen rutas públicas para evitar loops infinitos
  * (ej. si /auth/refresh devuelve 401, no reintentamos).
+ * 
+ * IMPORTANTE: Usa inject() dentro de la función para evitar circular dependency.
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (isPublicRoute(req.url)) {
     return next(req);
   }
 
+  // ✅ Lazy inject dentro de la función
   const authAdapter = inject(AuthHttpAdapter);
 
   return next(req).pipe(

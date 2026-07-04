@@ -6,7 +6,14 @@ import { catchError } from 'rxjs/operators';
 
 const ERROR_TIMEOUT_MS = 15000; // 15 segundos antes de timeout
 
+/**
+ * Interceptor global de manejo de errores.
+ * 
+ * IMPORTANTE: Los interceptores usan inject() en el cuerpo de la función,
+ * no en un constructor. Esto evita circular dependencies.
+ */
 export const errorHandlerInterceptor: HttpInterceptorFn = (req, next) => {
+    // ✅ Lazy inject dentro de la función, NO en top-level
     const errorService = inject(ErrorNotificationService);
 
     return next(req).pipe(

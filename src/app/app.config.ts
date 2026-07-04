@@ -1,6 +1,7 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 import { routes } from './app.routes';
 import { providePrimeNG } from 'primeng/config';
@@ -16,6 +17,8 @@ import { SnippetRepository } from '@core/infrastructure/repositories/snippet.rep
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    // ✅ MessageService provider ANTES de los interceptores (evita circular deps)
+    MessageService,
     provideHttpClient(withInterceptors([
       credentialsInterceptor,  // 1° — withCredentials: true en toda petición
       authInterceptor,         // 2° — auto-refresh en 401 para rutas protegidas
