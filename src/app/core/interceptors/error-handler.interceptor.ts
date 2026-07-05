@@ -1,5 +1,5 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { inject, Injector } from '@angular/core';
 import { ErrorNotificationService } from '@core/infrastructure/services/error-notification';
 import { throwError, timeout } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -9,16 +9,17 @@ const ERROR_TIMEOUT_MS = 15000; // 15 segundos antes de timeout
 /**
  * Interceptor global de manejo de errores.
  * 
- * IMPORTANTE: Los interceptores usan inject() en el cuerpo de la función,
- * no en un constructor. Esto evita circular dependencies.
+ * ✅ Usa runInInjectionContext para evitar circular dependency
  */
 export const errorHandlerInterceptor: HttpInterceptorFn = (req, next) => {
-    // ✅ Lazy inject dentro de la función, NO en top-level
-    const errorService = inject(ErrorNotificationService);
+    const injector = inject(Injector);
 
     return next(req).pipe(
         timeout(ERROR_TIMEOUT_MS),
         catchError((error) => {
+            // ✅ Inyectar el servicio SOLO cuando hay error (defer until needed)
+            const errorService = injector.get(ErrorNotificationService);
+            
             // 1. Sin conexión o error de red (status === 0)
             if (error.status === 0) {
                 errorService.showNetworkError(0, 'No hay conexión a internet');

@@ -1,12 +1,12 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ErrorNotification } from '@core/interfaces/error-notification.interface';
 
 /**
  * Servicio centralizado para notificaciones de error.
  * 
- * IMPORTANTE: Usa inject() dentro de métodos (lazy injection)
- * para evitar circular dependency con los interceptores.
+ * ✅ Inyección en constructor = contexto de inyección válido
+ * ✅ Evita circular dependencies con interceptores
  */
 @Injectable({
   providedIn: 'root',
@@ -14,24 +14,22 @@ import { ErrorNotification } from '@core/interfaces/error-notification.interface
 export class ErrorNotificationService {
   readonly lastError = signal<ErrorNotification | null>(null);
   readonly isOnline = signal<boolean>(navigator.onLine);
+  
+  private readonly messageService = inject(MessageService);
   private networkListenersSetup = false;
 
+  constructor() {
+    this.setupNetworkListeners();
+  }
+
   showError(notification: ErrorNotification): void {
-    // ✅ Lazy inject aquí, NO en constructor
-    const messageService = inject(MessageService);
-    
     this.lastError.set(notification);
-    messageService.add({
+    this.messageService.add({
       severity: notification.severity,
       summary: notification.summary,
       detail: notification.detail,
       life: notification.life ?? 5000,
     });
-    
-    // Configurar listeners la primera vez que se necesite
-    if (!this.networkListenersSetup) {
-      this.setupNetworkListeners();
-    }
   }
 
   showNetworkError(statusCode: number, message?: string): void {
@@ -64,12 +62,10 @@ export class ErrorNotificationService {
   private setupNetworkListeners(): void {
     if (this.networkListenersSetup) return;
     this.networkListenersSetup = true;
-    
-    const messageService = inject(MessageService);
 
     window.addEventListener('online', () => {
       this.isOnline.set(true);
-      messageService.add({
+      this.messageService.add({
         severity: 'success',
         summary: 'Conexión Restaurada',
         detail: 'Ya estás en línea.',
@@ -79,7 +75,7 @@ export class ErrorNotificationService {
 
     window.addEventListener('offline', () => {
       this.isOnline.set(false);
-      messageService.add({
+      this.messageService.add({
         severity: 'error',
         summary: 'Sin Conexión',
         detail: 'Parece que perdiste la conexión a internet.',
