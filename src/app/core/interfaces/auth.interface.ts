@@ -28,8 +28,8 @@ export interface MessageResponse {
     message: string;
 }
 
-/** Backend devuelve { message: 'Token refreshed successfully' } y setea cookie */
-export type RefreshResponse = MessageResponse;
+/** Backend devuelve { user: UserResponse } y setea cookie */
+export type RefreshResponse = AuthResponse;
 
 /** Backend devuelve { message: 'Logged out successfully' } y limpia cookies */
 export type LogoutResponse = MessageResponse;

@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { MessageResponse, UserAuthRepository } from '@core/domain/repositories/user.repositories.interface';
+import { UserAuthRepository } from '@core/domain/repositories/user.repositories.interface';
+import { AuthResultDto } from '../../dto/auth.dto';
 
 @Injectable({
     providedIn: 'root',
@@ -7,7 +8,7 @@ import { MessageResponse, UserAuthRepository } from '@core/domain/repositories/u
 export class RefreshTokenUseCase {
     private readonly userAuthRepository = inject(UserAuthRepository);
 
-    execute(): Promise<MessageResponse> {
+    execute(): Promise<AuthResultDto> {
         return this.userAuthRepository.refreshToken();
     }
 }

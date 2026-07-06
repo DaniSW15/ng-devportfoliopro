@@ -29,6 +29,19 @@ export class AuthFacade {
   readonly isRefreshing = computed(() => this.status() === 'refreshing');
   readonly isAuthenticated = computed(() => this.status() === 'authenticated' && !!this.user());
 
+  constructor() {
+    // Hidratar estado inicial de forma síncrona desde localStorage al recargar la página
+    try {
+      const storedUser = localStorage.getItem('devportfolio_user');
+      if (storedUser) {
+        this.user.set(JSON.parse(storedUser));
+        this.status.set('authenticated');
+      }
+    } catch {
+      localStorage.removeItem('devportfolio_user');
+    }
+  }
+
   // ── Login ──
   async login(credentials: LoginDto): Promise<AuthResultDto> {
     this.status.set('loading');
@@ -37,6 +50,7 @@ export class AuthFacade {
     try {
       const result = await this.loginUseCase.execute(credentials);
       this.user.set(result.user);
+      localStorage.setItem('devportfolio_user', JSON.stringify(result.user)); // Guardar sesión
       this.status.set('authenticated');
       return result;
     } catch (error) {
@@ -54,6 +68,7 @@ export class AuthFacade {
     try {
       const result = await this.registerUseCase.execute(dto);
       this.user.set(result.user);
+      localStorage.setItem('devportfolio_user', JSON.stringify(result.user)); // Guardar sesión
       this.status.set('authenticated');
       return result;
     } catch (error) {
@@ -65,22 +80,19 @@ export class AuthFacade {
 
   // ── Refresh Session ──
   async refreshSession(): Promise<void> {
-    const previousStatus = this.status();
     this.status.set('refreshing');
     this.error.set(null);
 
     try {
-      await this.refreshTokenUseCase.execute();
-      // Restaurar estado anterior o mantener authenticated
-      this.status.set(previousStatus === 'idle' ? 'authenticated' : previousStatus);
-      // Si venimos del callback de GitHub, marcamos como authenticated
-      if (previousStatus === 'idle' || previousStatus === 'refreshing') {
-        this.status.set('authenticated');
-      }
+      const result = await this.refreshTokenUseCase.execute();
+      this.user.set(result.user);
+      localStorage.setItem('devportfolio_user', JSON.stringify(result.user));
+      this.status.set('authenticated');
     } catch (error) {
       this.status.set('error');
       this.error.set(this.getErrorMessage(error));
       this.user.set(null);
+      localStorage.removeItem('devportfolio_user'); // Limpiar sesión si el refresh falla
     }
   }
 
@@ -94,6 +106,7 @@ export class AuthFacade {
       this.user.set(null);
       this.error.set(null);
       this.status.set('idle');
+      localStorage.removeItem('devportfolio_user'); // Limpiar sesión
     }
   }
 

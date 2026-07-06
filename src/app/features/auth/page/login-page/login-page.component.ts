@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { AuthFacade } from '../../services/auth.facade';
+import { TokenStorageService } from '@core/infrastructure/services/token-storage-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page.component',
@@ -12,8 +14,11 @@ import { AuthFacade } from '../../services/auth.facade';
 })
 export class LoginPageComponent {
   private readonly formBuilder = inject(FormBuilder);
+  private readonly tokenStorage = inject(TokenStorageService);
+  private readonly router = inject(Router);
 
   readonly authFacade = inject(AuthFacade);
+  readonly loginError = signal<string | null>(null);
 
   readonly form = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -29,8 +34,11 @@ export class LoginPageComponent {
     const payload = this.form.getRawValue();
     try {
       await this.authFacade.login(payload);
-    } catch {
-      // AuthFacade already exposes a signal error that the template consumes.
+      this.router.navigate(['/dashboard']);
+    } catch (error) {
+      this.loginError.set(
+        error instanceof Error ? error.message : 'Login failed'
+      );
     }
   }
 

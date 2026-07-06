@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { API_CONFIG } from '@core/config/api.config';
-import { AuthResponse, LoginRequest, MessageResponse, RegisterRequest } from '@core/interfaces/auth.interface';
+import { AuthResponse, LoginRequest, MessageResponse, RegisterRequest, RefreshResponse } from '@core/interfaces/auth.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -18,8 +18,8 @@ export class AuthHttpAdapter {
 		return this.http.post<AuthResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.AUTH.REGISTER}`, payload);
 	}
 
-    refresh(): Observable<MessageResponse> {
-        return this.http.post<MessageResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.AUTH.REFRESH}`, {});
+    refresh(): Observable<RefreshResponse> {
+        return this.http.post<RefreshResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.AUTH.REFRESH}`, {});
     }
 
     logout(): Observable<MessageResponse> {

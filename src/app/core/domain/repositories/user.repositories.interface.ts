@@ -24,6 +24,6 @@ export abstract class UserAuthRepository {
 	abstract login(credentials: LoginCredentials): Promise<AuthSession>;
 	abstract register(input: RegisterAccountInput): Promise<AuthSession>;
     abstract logout(): Promise<MessageResponse>;
-    abstract refreshToken(): Promise<MessageResponse>;
+    abstract refreshToken(): Promise<AuthSession>;
     abstract beginGithubLogin(): void;
 }

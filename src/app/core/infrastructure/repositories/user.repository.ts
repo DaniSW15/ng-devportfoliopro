@@ -28,8 +28,9 @@ export class UserRepository implements UserAuthRepository {
 		return firstValueFrom(this.authHttpAdapter.logout());
 	}
 
-	async refreshToken(): Promise<MessageResponse> {
-		return firstValueFrom(this.authHttpAdapter.refresh());
+	async refreshToken(): Promise<AuthSession> {
+		const response = await firstValueFrom(this.authHttpAdapter.refresh());
+		return this.toAuthSession(response);
 	}
 
 	beginGithubLogin(): void {
