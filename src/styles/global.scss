@@ -1,0 +1,80 @@
+@import 'variables';
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+// Normalización Senior sobre PrimeNG para armonizar con el tema oscuro
+.p-inputtext, .p-inputnumber-input {
+  background: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1rem !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+
+  &:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+    background: rgba(30, 41, 59, 0.95) !important;
+  }
+}
+
+// Checkboxes personalizados para tema oscuro
+.p-checkbox-box {
+  background: rgba(30, 41, 59, 0.4) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.35) !important; // Borde blanco mucho más visible
+  border-radius: 6px !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+
+  &:hover {
+    border-color: #ffffff !important; // Hover cambia a blanco brillante para indicar foco
+    background: rgba(30, 41, 59, 0.8) !important;
+  }
+
+  &.p-highlight {
+    background: var(--primary-color, #6366f1) !important; // Color primario (indigo/azul) al estar activo
+    border-color: var(--primary-color, #6366f1) !important;
+
+    // Asegurar que el icono (checkmark) sea blanco brillante y visible
+    .p-checkbox-icon,
+    .p-icon,
+    svg,
+    path {
+      color: #ffffff !important;
+      fill: #ffffff !important;
+      stroke: #ffffff !important;
+    }
+  }
+}
+
+// Estilo de la etiqueta del checkbox para que sea blanco brillante y legible
+.p-checkbox-label,
+label.p-checkbox-label {
+  color: #ffffff !important; // Forzar blanco puro para el texto
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+  margin-left: 0.6rem !important;
+  cursor: pointer;
+}
+
+// Ajustes del layout del generador para usar los tokens del Design System
+.tool-card {
+  background: var(--card-bg) !important;
+  backdrop-filter: var(--backdrop-blur) !important;
+  -webkit-backdrop-filter: var(--backdrop-blur) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--box-shadow-premium) !important;
+}
+
+.checkbox-group {
+  background: rgba(255, 255, 255, 0.02) !important; // Fondo gris neutro traslúcido
+  border: 1px solid rgba(255, 255, 255, 0.1) !important; // Borde sutil blanco
+}

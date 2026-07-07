@@ -1,1 +1,49 @@
-<p>json-formatter works!</p>
+<div class="tool-container">
+    <h2>Formateador y Validador de JSON 🗂️</h2>
+    <p class="subtitle">Formatea, limpia, minifica y valida tus cadenas JSON en tiempo real.</p>
+
+    <div class="tool-card">
+        <!-- Entrada de JSON crudo -->
+        <div class="option-field">
+            <label for="json-input">Escribe o pega tu JSON aquí</label>
+            <textarea id="json-input" class="w-full p-inputtext font-mono text-sm" rows="8"
+                placeholder='{ "name": "Antigravity", "role": "Senior Developer" }' [ngModel]="rawJson()"
+                (ngModelChange)="rawJson.set($event)">
+      </textarea>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="action-buttons flex gap-3 mt-4">
+            <p-button label="Formatear (2 Espacios)" icon="pi pi-code" [loading]="toolFacade.isLoading()"
+                (onClick)="onFormat()" class="flex-1">
+            </p-button>
+
+            <p-button label="Minificar (Compactar)" icon="pi pi-compress" severity="secondary"
+                [loading]="toolFacade.isLoading()" (onClick)="onMinify()" class="flex-1">
+            </p-button>
+        </div>
+
+        <!-- Mensaje de Error en caso de JSON Inválido -->
+        @if (toolFacade.error()) {
+        <div class="error-section mt-4">
+            <p-message severity="error" [text]="toolFacade.error()!"></p-message>
+        </div>
+        }
+
+        <!-- Resultado Formateado -->
+        @if (toolFacade.jsonResult(); as result) {
+        <div class="result-section mt-4">
+            <div class="flex justify-between items-center mb-2">
+                <label class="result-label m-0">JSON Procesado</label>
+                <p-button [icon]="copied() ? 'pi pi-check' : 'pi pi-copy'" [label]="copied() ? 'Copiado!' : 'Copiar'"
+                    [severity]="copied() ? 'success' : 'secondary'" (onClick)="copyResult(result.result)">
+                </p-button>
+            </div>
+
+            <div class="code-block">
+                <pre><code>{{ result.result }}</code></pre>
+            </div>
+        </div>
+        }
+    </div>
+</div>

@@ -1,13 +1,10 @@
-// Estilos para el formateador de JSON
+// Estilos para el decodificador JWT
 
-.action-buttons {
+.grid-results {
   display: flex;
-  gap: 1rem;
-  margin: 1.5rem 0;
-
-  @media (max-width: 576px) {
-    flex-direction: column;
-  }
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .code-block {
@@ -15,8 +12,15 @@
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
-  max-height: 500px;
-  overflow-y: auto;
+  
+  .block-title {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
 
   pre {
     margin: 0;

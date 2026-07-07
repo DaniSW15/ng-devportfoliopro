@@ -1,0 +1,63 @@
+<div class="layout-container">
+
+    <!-- SIDEBAR (Barra lateral izquierda) -->
+    <aside class="layout-sidebar">
+        <div class="sidebar-logo">
+            <span class="logo-icon">🚀</span>
+            <span class="logo-text">DevPortfolio</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <!-- Links de navegación con estado activo -->
+            <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-home"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a routerLink="/tools/password-generator" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-key"></i>
+                <span>Generador de Claves</span>
+            </a>
+
+            <a routerLink="/tools/jwt-decoder" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-shield"></i>
+                <span>Decodificador JWT</span>
+            </a>
+
+            <a routerLink="/tools/json-formatter" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-code"></i>
+                <span>Formateador JSON</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- CONTENEDOR PRINCIPAL (Derecha) -->
+    <div class="layout-main">
+
+        <!-- NAVBAR (Barra superior) -->
+        <header class="layout-navbar">
+            <div class="navbar-left">
+                <span class="welcome-text">¡Hola, <strong>{{ userEmail }}</strong>! 👋</span>
+            </div>
+
+            <div class="navbar-right">
+                <p-button label="Cerrar Sesión" icon="pi pi-sign-out" severity="danger" [text]="true"
+                    (onClick)="logout()">
+                </p-button>
+            </div>
+        </header>
+
+        <!-- ÁREA DE CONTENIDO -->
+        <main class="layout-content">
+            <!-- Aquí Angular inyectará el componente de la página activa -->
+            <router-outlet></router-outlet>
+        </main>
+
+        <!-- FOOTER (Pie de página) -->
+        <footer class="layout-footer">
+            <p>© 2026 DevPortfolio Pro. Diseñado con Clean Architecture.</p>
+        </footer>
+
+    </div>
+
+</div>

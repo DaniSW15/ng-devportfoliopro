@@ -31,12 +31,16 @@ export type JsonAction = 'format' | 'minify' | 'validate';
 export interface JsonFormatterRequest {
     jsonString: string;
     action: JsonAction;
+    spaces?: number;
 }
 
 export interface JsonFormatterResponse {
     result: string;
-    isValid: boolean;
-    error: string | null;
+    success: boolean;
+    error?: string;
+    originalSize: number;
+    resultSize: number;
+    processingTime: number;
 }
 
 // ── Base64 Tool ──

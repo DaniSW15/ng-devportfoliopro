@@ -1,1 +1,216 @@
-<p>api-key-list works!</p>
+<div class="api-keys-container">
+  <div class="header-section flex justify-between items-center mb-6">
+    <div>
+      <h2>Mis API Keys 🔑</h2>
+      <p class="subtitle m-0">Administra tus llaves de acceso para integrar nuestras herramientas con tus proyectos.</p>
+    </div>
+    <p-button 
+      label="Crear Nueva Llave" 
+      icon="pi pi-plus" 
+      (onClick)="showCreateModal()">
+    </p-button>
+  </div>
+
+  <!-- Mensaje de Error General -->
+  @if (facade.error()) {
+    <div class="mb-4">
+      <p-message severity="error" [text]="facade.error()!"></p-message>
+    </div>
+  }
+
+  <!-- TABLA DE API KEYS -->
+  <div class="tool-card p-0 overflow-hidden">
+    <p-table 
+      [value]="facade.apiKeys()" 
+      [loading]="facade.isLoading() && facade.apiKeys().length === 0"
+      responsiveLayout="scroll"
+      class="custom-table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nombre</th>
+          <th>Estado</th>
+          <th>Uso</th>
+          <th>Expiración</th>
+          <th>Creado</th>
+          <th style="width: 180px;" class="text-right">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-key>
+        <tr>
+          <td><strong>{{ key.name }}</strong></td>
+          <td>
+            <span class="badge" [ngClass]="key.isActive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'">
+              {{ key.isActive ? 'Activa' : 'Inactiva' }}
+            </span>
+          </td>
+          <td>{{ key.usageCount }} solicitudes</td>
+          <td>
+            @if (key.expiresAt) {
+              {{ key.expiresAt | date:'mediumDate' }}
+            } @else {
+              <span class="text-slate-500">Nunca</span>
+            }
+          </td>
+          <td>{{ key.createdAt | date:'shortDate' }}</td>
+          <td class="text-right actions-cell">
+            <div class="flex justify-end gap-2">
+              <p-button 
+                icon="pi pi-chart-bar" 
+                severity="secondary" 
+                [text]="true"
+                (onClick)="showStats(key.id)"
+                title="Ver Estadísticas">
+              </p-button>
+              
+              @if (key.isActive) {
+                <p-button 
+                  icon="pi pi-ban" 
+                  severity="warn" 
+                  [text]="true"
+                  (onClick)="onRevoke(key.id)"
+                  title="Revocar Llave">
+                </p-button>
+              }
+
+              <p-button 
+                icon="pi pi-trash" 
+                severity="danger" 
+                [text]="true"
+                (onClick)="onDelete(key.id)"
+                title="Eliminar permanentemente">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="text-center p-8 text-slate-500">
+            No tienes ninguna API Key generada aún. ¡Crea una para comenzar!
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- MODAL: CREAR NUEVA LLAVE -->
+  <p-dialog 
+    header="Generar Nueva API Key" 
+    [(visible)]="isCreateModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '480px' }"
+    [draggable]="false"
+    [resizable]="false">
+    
+    @if (!facade.newlyCreatedKey()) {
+      <!-- Formulario para crear -->
+      <div class="flex flex-col gap-4 mt-2">
+        <div class="form-field flex flex-col gap-2">
+          <label for="name" class="font-semibold text-sm">Nombre de la Llave</label>
+          <input 
+            pInputText 
+            id="name" 
+            placeholder="ej. Servidor de Producción" 
+            [ngModel]="keyName()"
+            (ngModelChange)="keyName.set($event)"
+            class="w-full" />
+        </div>
+
+        <div class="form-field flex flex-col gap-2">
+          <label for="expires" class="font-semibold text-sm">Expiración (Opcional)</label>
+          <input 
+            pInputText 
+            type="date" 
+            id="expires" 
+            [ngModel]="expiresAt()"
+            (ngModelChange)="expiresAt.set($event)"
+            class="w-full" />
+        </div>
+
+        <div class="flex justify-end gap-3 mt-4">
+          <p-button 
+            label="Cancelar" 
+            severity="secondary" 
+            (onClick)="isCreateModalVisible.set(false)">
+          </p-button>
+          <p-button 
+            label="Generar" 
+            [loading]="facade.isLoading()"
+            [disabled]="!keyName().trim()"
+            (onClick)="onCreate()">
+          </p-button>
+        </div>
+      </div>
+    } @else {
+      <!-- Llave creada (Mostrar solo una vez) -->
+      <div class="flex flex-col gap-4 mt-2">
+        <p-message severity="warn" text="Guarda esta clave en un lugar seguro. No podrás verla de nuevo."></p-message>
+        
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-sm">Tu API Key Privada</label>
+          <div class="flex gap-2">
+            <input 
+              pInputText 
+              type="text" 
+              [value]="facade.newlyCreatedKey()!.key" 
+              readonly 
+              class="w-full font-mono text-sm" />
+            <p-button 
+              [icon]="copied() ? 'pi pi-check' : 'pi pi-copy'" 
+              [severity]="copied() ? 'success' : 'secondary'"
+              (onClick)="copyToClipboard(facade.newlyCreatedKey()!.key)">
+            </p-button>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-4">
+          <p-button 
+            label="Entendido, Cerrar" 
+            (onClick)="isCreateModalVisible.set(false)">
+          </p-button>
+        </div>
+      </div>
+    }
+  </p-dialog>
+
+  <!-- MODAL: ESTADÍSTICAS -->
+  <p-dialog 
+    header="Estadísticas de API Key" 
+    [(visible)]="isStatsModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '400px' }"
+    [draggable]="false"
+    [resizable]="false">
+    
+    @if (facade.isLoading() && !facade.selectedKeyStats()) {
+      <div class="flex justify-center p-8">
+        <i class="pi pi-spin pi-spinner text-3xl"></i>
+      </div>
+    } @else if (facade.selectedKeyStats(); as stats) {
+      <div class="flex flex-col gap-6 mt-2">
+        <div class="stat-item flex justify-between border-b border-slate-700/50 pb-3">
+          <span class="text-slate-400 font-medium">Solicitudes Totales:</span>
+          <span class="text-xl font-bold text-white">{{ stats.requestCount }}</span>
+        </div>
+
+        <div class="stat-item flex justify-between">
+          <span class="text-slate-400 font-medium">Último uso activo:</span>
+          <span class="text-white font-semibold">
+            @if (stats.lastUsedAt) {
+              {{ stats.lastUsedAt | date:'medium' }}
+            } @else {
+              <span class="text-slate-500">Nunca usada</span>
+            }
+          </span>
+        </div>
+
+        <div class="flex justify-end mt-4">
+          <p-button 
+            label="Cerrar" 
+            (onClick)="isStatsModalVisible.set(false)">
+          </p-button>
+        </div>
+      </div>
+    }
+  </p-dialog>
+</div>

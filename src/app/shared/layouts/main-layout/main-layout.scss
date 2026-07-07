@@ -1,0 +1,112 @@
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.layout-sidebar {
+  width: 280px;
+  background: var(--card-bg);
+  backdrop-filter: var(--backdrop-blur);
+  border-right: 1px solid var(--border-color);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .logo-icon {
+      font-size: 1.75rem;
+    }
+
+    .logo-text {
+      font-weight: 850;
+      font-size: 1.25rem;
+      letter-spacing: -0.03em;
+      color: var(--text-color);
+    }
+  }
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.25rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+
+    i {
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      color: var(--text-color);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    &.active {
+      color: #ffffff;
+      background: var(--primary-color);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+  }
+}
+
+.layout-main {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.layout-navbar {
+  height: 75px;
+  background: var(--card-bg);
+  backdrop-filter: var(--backdrop-blur);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .welcome-text {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+
+    strong {
+      color: var(--text-color);
+    }
+  }
+}
+
+.layout-content {
+  flex-grow: 1;
+  padding: 2.5rem;
+  overflow-y: auto;
+  background: var(--bg-color);
+}
+
+.layout-footer {
+  padding: 1.5rem;
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-color);
+
+  p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+}

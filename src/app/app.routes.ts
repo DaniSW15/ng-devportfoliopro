@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth-guard';
+import { MainLayout } from '@shared/layouts/main-layout/main-layout';
 
 export const routes: Routes = [
     {
@@ -7,18 +8,32 @@ export const routes: Routes = [
         loadChildren: () => import('./features/auth/auth.routes').then((m) => m.authRoutes),
     },
     {
-        path: 'dashboard',
-        loadChildren: () => import('./features/dashboard/dashboard.routes').then((m) => m.dashboardRoutes),
-        canActivate: [authGuard], // Protegido
-    },
-    {
         path: '',
-        redirectTo: 'dashboard', // 👈 ¡RECOMENDADO! Apunta a la ruta principal
-        pathMatch: 'full',
+        component: MainLayout,
+        canActivate: [authGuard], // Protegido
+        children: [
+            {
+                path: 'dashboard',
+                loadChildren: () => import('./features/dashboard/dashboard.routes').then((m) => m.dashboardRoutes),
+            },
+            {
+                path: 'tools',
+                loadChildren: () => import('./features/tools/tools.routes').then((m) => m.toolsRoutes),
+            },
+            {
+                path: 'api-keys',
+                loadChildren: () => import('./features/api-keys/api-keys.routes').then((m) => m.apiKeysRoutes),
+            },
+            {
+                path: '',
+                redirectTo: 'dashboard', // 👈 ¡RECOMENDADO! Apunta a la ruta principal
+                pathMatch: 'full',
+            },
+            {
+                path: '**',
+                redirectTo: 'dashboard', // 👈 Evita mandar a login si el usuario ya está navegando
+                pathMatch: 'full',
+            }
+        ],
     },
-    {
-        path: '**',
-        redirectTo: 'dashboard', // 👈 Evita mandar a login si el usuario ya está navegando
-        pathMatch: 'full',
-    }
 ];

@@ -13,6 +13,10 @@ import { UserAuthRepository } from '@core/domain/repositories/user.repositories.
 import { UserRepository } from '@core/infrastructure/repositories/user.repository';
 import { ISnippetRepository } from '@core/domain/repositories/snippet.repositories.interface';
 import { SnippetRepository } from '@core/infrastructure/repositories/snippet.repository';
+import { IToolsRepository } from '@core/domain/repositories/tools.repositories.interface';
+import { ToolsRepository } from '@core/infrastructure/repositories/tools.repository';
+import { ApiKeyRepositoryInterface } from '@core/domain/repositories/api-key.repositories.interface';
+import { ApiKeyRepository } from '@core/infrastructure/repositories/api-key.repository';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,6 +36,14 @@ export const appConfig: ApplicationConfig = {
     {
       provide: ISnippetRepository,
       useClass: SnippetRepository,
+    },
+    {
+      provide: IToolsRepository,
+      useClass: ToolsRepository,
+    },
+    {
+      provide: ApiKeyRepositoryInterface,
+      useClass: ApiKeyRepository,
     },
     providePrimeNG({
       theme: {

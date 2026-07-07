@@ -1,0 +1,57 @@
+<div class="tool-container">
+    <h2>Decodificador JWT 🎫</h2>
+    <p class="subtitle">Pega un JSON Web Token para ver su encabezado, firma y datos internos.</p>
+
+    <div class="tool-card">
+        <!-- Entrada de Texto -->
+        <div class="option-field">
+            <label for="jwt-token">Pegar Token JWT</label>
+            <textarea id="jwt-token" class="w-full p-inputtext font-mono text-sm" rows="6"
+                placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." [ngModel]="tokenInput()"
+                (ngModelChange)="tokenInput.set($event)">
+      </textarea>
+        </div>
+
+        <!-- Botón de Acción -->
+        <div class="action-section">
+            <p-button label="Decodificar Token" icon="pi pi-bolt" [loading]="toolFacade.isLoading()"
+                (onClick)="onDecode()" class="w-full">
+            </p-button>
+        </div>
+
+        <!-- Mensaje de Error (si el token es inválido) -->
+        @if (toolFacade.error()) {
+        <div class="error-section">
+            <p-message severity="error" [text]="toolFacade.error()!"></p-message>
+        </div>
+        }
+
+        <!-- Resultados -->
+        @if (toolFacade.jwtResult(); as result) {
+        <div class="result-section">
+
+            <!-- Estado del Token (Expiración) -->
+            <div class="token-status mb-4">
+                <p-message [severity]="isExpired(getExpiration(result.payload)) ? 'error' : 'success'"
+                    [text]="isExpired(getExpiration(result.payload)) ? 'El token ya ha expirado ❌' : 'El token es válido y está activo ✅'">
+                </p-message>
+            </div>
+
+            <div class="grid-results">
+                <!-- Bloque Header -->
+                <div class="code-block">
+                    <span class="block-title text-orange-400">Header (Algoritmo y Tipo)</span>
+                    <pre><code>{{ result.header | json }}</code></pre>
+                </div>
+
+                <!-- Bloque Payload -->
+                <div class="code-block mt-4">
+                    <span class="block-title text-blue-400">Payload (Datos del Usuario)</span>
+                    <pre><code>{{ result.payload | json }}</code></pre>
+                </div>
+            </div>
+
+        </div>
+        }
+    </div>
+</div>

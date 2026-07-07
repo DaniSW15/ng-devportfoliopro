@@ -41,6 +41,8 @@ export const API_CONFIG = {
     LIST: '/api-keys',
     CREATE: '/api-keys',
     DELETE: (id: string) => `/api-keys/${id}`,
+    DELETE_PERMANENT: (id: string) => `/api-keys/${id}/permanent`,
+    STATS: (id: string) => `/api-keys/${id}/stats`,
   },
 
   // === BILLING ENDPOINTS ===

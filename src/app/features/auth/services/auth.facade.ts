@@ -1,4 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { AuthResultDto, LoginDto, RegisterDto } from '../../../core/application/dto/auth.dto';
 import { LoginUseCase } from '../../../core/application/use-cases/auth/login.use-case';
@@ -18,6 +19,7 @@ export class AuthFacade {
   private readonly refreshTokenUseCase = inject(RefreshTokenUseCase);
   private readonly logoutUseCase = inject(LogoutUseCase);
   private readonly userAuthRepository = inject(UserAuthRepository);
+  private readonly router = inject(Router);
 
   // ── Signals ──
   readonly status = signal<AuthStatus>('idle');
@@ -107,6 +109,7 @@ export class AuthFacade {
       this.error.set(null);
       this.status.set('idle');
       localStorage.removeItem('devportfolio_user'); // Limpiar sesión
+      this.router.navigate(['/auth/login']); // 👈 Redirigir a login
     }
   }
 
