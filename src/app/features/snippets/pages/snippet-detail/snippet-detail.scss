@@ -1,0 +1,91 @@
+.snippets-container {
+  max-width: 1000px;
+  margin: 1rem auto;
+}
+
+.back-link {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+
+  &:hover {
+    i {
+      transform: translateX(-3px);
+    }
+  }
+
+  i {
+    transition: transform 0.2s ease;
+  }
+}
+
+.language-badge {
+  display: inline-block;
+  font-family: 'Fira Code', 'Courier New', Courier, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--primary-color, #6366f1);
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 6px;
+  padding: 0.2rem 0.5rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.visibility-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  letter-spacing: 0.025em;
+
+  &.public {
+    background: rgba(34, 197, 94, 0.1);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+  }
+
+  &.private {
+    background: rgba(148, 163, 184, 0.1);
+    color: #cbd5e1;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+  }
+}
+
+.code-wrapper {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.code-content {
+  max-height: 550px;
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.2);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+}
+
+.tag-badge {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #94a3b8);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+}

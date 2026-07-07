@@ -1,1 +1,143 @@
-<p>timestamp-converter works!</p>
+<div class="tool-container">
+  <h2>Convertidor de Timestamp UNIX 🕒</h2>
+  <p class="subtitle">Realiza conversiones veloces entre marcas de tiempo Epoch UNIX y fechas legibles en UTC y hora local.</p>
+
+  <!-- Timestamp en Tiempo Real -->
+  @if (toolFacade.timestampResult(); as current) {
+    @if (isCurrentResponse(current)) {
+      <div class="current-epoch-banner flex justify-between items-center mb-6 p-4 rounded-xl border border-slate-700/50">
+        <div>
+          <span class="banner-title text-slate-400 text-xs uppercase font-bold tracking-wider">Timestamp UNIX Actual</span>
+          <div class="epoch-value font-mono text-2xl font-bold text-indigo-400 mt-1">{{ asCurrent(current).timestamp }}</div>
+        </div>
+        <div class="flex gap-2">
+          <p-button 
+            icon="pi pi-refresh" 
+            severity="secondary" 
+            [loading]="toolFacade.isLoading()"
+            (onClick)="onGetCurrent()"
+            title="Refrescar Epoch Actual">
+          </p-button>
+          <p-button 
+            [icon]="copied() ? 'pi pi-check' : 'pi pi-copy'" 
+            [severity]="copied() ? 'success' : 'secondary'"
+            (onClick)="copyText(asCurrent(current).timestamp)"
+            title="Copiar Epoch">
+          </p-button>
+        </div>
+      </div>
+    }
+  }
+
+  <div class="tool-card">
+    <!-- Selector de modo -->
+    <div class="option-field">
+      <label>Operación</label>
+      <select 
+        class="custom-select w-full"
+        [ngModel]="mode()" 
+        (ngModelChange)="mode.set($event)">
+        <option value="to-date">Convertir Epoch UNIX a Fecha</option>
+        <option value="to-timestamp">Convertir Fecha a Epoch UNIX</option>
+      </select>
+    </div>
+
+    <!-- MODO: Epoch a Fecha -->
+    @if (mode() === 'to-date') {
+      <div class="option-field mt-4">
+        <label for="epoch-input">Timestamp UNIX (Segundos)</label>
+        <input 
+          id="epoch-input" 
+          pInputText 
+          type="text" 
+          placeholder="ej. 1700000000" 
+          [ngModel]="timestampInput()"
+          (ngModelChange)="timestampInput.set($event)"
+          class="w-full font-mono" />
+      </div>
+    } @else {
+      <!-- MODO: Fecha a Epoch -->
+      <div class="option-field mt-4">
+        <label for="date-input">Cadena de Fecha (ISO / Humano)</label>
+        <input 
+          id="date-input" 
+          pInputText 
+          type="text" 
+          placeholder="ej. 2026-07-07T12:00:00Z o YYYY-MM-DD" 
+          [ngModel]="dateInput()"
+          (ngModelChange)="dateInput.set($event)"
+          class="w-full font-mono" />
+      </div>
+    }
+
+    <div class="action-section mt-6">
+      <p-button 
+        label="Convertir" 
+        icon="pi pi-sync" 
+        [loading]="toolFacade.isLoading()"
+        (onClick)="onConvert()" 
+        class="w-full">
+      </p-button>
+    </div>
+
+    @if (toolFacade.error()) {
+      <div class="error-section">
+        <p-message severity="error" [text]="toolFacade.error()!"></p-message>
+      </div>
+    }
+
+    <!-- Resultados de la conversión -->
+    @if (toolFacade.timestampResult(); as result) {
+      <!-- Resultado: To Date -->
+      @if (isToDateFullResponse(result)) {
+        <div class="result-section flex flex-col gap-4 mt-4">
+          <span class="result-label">Fechas Convertidas</span>
+          
+          <div class="flex flex-col gap-3 font-mono text-sm">
+            <div class="flex justify-between items-center border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Fecha Relativa:</span>
+              <span class="font-bold text-white">{{ asToDate(result).date }}</span>
+            </div>
+            
+            <div class="flex justify-between items-center border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">ISO 8601:</span>
+              <div class="flex gap-2 items-center">
+                <span class="text-indigo-300">{{ asToDate(result).iso }}</span>
+                <i class="pi pi-copy text-xs text-slate-500 cursor-pointer hover:text-white" (click)="copyText(asToDate(result).iso)"></i>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Hora UTC:</span>
+              <span class="text-white">{{ asToDate(result).utc }}</span>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">Hora Local:</span>
+              <span class="text-white">{{ asToDate(result).local }}</span>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Resultado: To Timestamp -->
+      @if (isToTimestampResponse(result)) {
+        <div class="result-section mt-4">
+          <div class="flex justify-between items-center mb-2">
+            <span class="result-label m-0">Epoch UNIX Resultante</span>
+            <p-button 
+              [icon]="copied() ? 'pi pi-check' : 'pi pi-copy'" 
+              [label]="copied() ? 'Copiado!' : 'Copiar'"
+              [severity]="copied() ? 'success' : 'secondary'" 
+              (onClick)="copyText(asToTimestamp(result).timestamp)">
+            </p-button>
+          </div>
+          
+          <div class="code-block font-mono text-xl text-center font-bold text-indigo-400">
+            {{ asToTimestamp(result).timestamp }}
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>

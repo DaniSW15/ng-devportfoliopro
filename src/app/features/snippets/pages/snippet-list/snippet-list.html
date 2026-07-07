@@ -1,1 +1,77 @@
-<p>snippet-list works!</p>
+<div class="snippets-container">
+  <div class="header-section flex justify-between items-center mb-6">
+    <div>
+      <h2>Mis Snippets 📑</h2>
+      <p class="subtitle m-0">Organiza, reutiliza y comparte tus fragmentos de código favoritos.</p>
+    </div>
+    <p-button 
+      label="Nuevo Snippet" 
+      icon="pi pi-plus" 
+      [routerLink]="['/snippets/new']">
+    </p-button>
+  </div>
+
+  <!-- Barra de búsqueda y filtros -->
+  <div class="search-bar-section mb-6">
+    <div class="search-input-wrapper flex gap-4 items-center">
+      <p-iconfield class="w-full">
+        <p-inputicon>
+          <svg data-p-icon="search" class="text-slate-400"></svg>
+        </p-inputicon>
+        <input 
+          pInputText 
+          placeholder="Buscar snippets por título, código o etiqueta..." 
+          [ngModel]="searchQuery()" 
+          (ngModelChange)="onSearchChange($event)"
+          class="w-full" />
+      </p-iconfield>
+    </div>
+  </div>
+
+  <!-- Mensaje de Error -->
+  @if (facade.error()) {
+    <div class="mb-4">
+      <p-message severity="error" [text]="facade.error()!"></p-message>
+    </div>
+  }
+
+  <!-- Cargando -->
+  @if (facade.isLoading() && facade.snippets().length === 0) {
+    <div class="flex flex-col justify-center items-center p-12 text-slate-400">
+      <svg data-p-icon="spinner" class="animate-spin text-4xl mb-3 text-indigo-400 w-8 h-8"></svg>
+      <p>Cargando tus snippets...</p>
+    </div>
+  } @else {
+    <!-- Grilla de Snippets -->
+    @if (facade.snippets().length > 0) {
+      <div class="snippets-grid">
+        @for (snippet of facade.snippets(); track snippet.id) {
+          <app-snippet-card 
+            [snippet]="snippet" 
+            (delete)="onDeleteSnippet($event)">
+          </app-snippet-card>
+        }
+      </div>
+    } @else {
+      <!-- Estado vacío -->
+      <div class="empty-state-card text-center p-12 tool-card">
+        <div class="empty-icon text-5xl mb-4 text-slate-500">📂</div>
+        <h3 class="text-xl font-bold text-white mb-2">No se encontraron snippets</h3>
+        <p class="text-slate-400 max-w-md mx-auto mb-6">
+          @if (searchQuery().trim()) {
+            No hay ningún snippet que coincida con tu búsqueda. Prueba con otros términos.
+          } @else {
+            Aún no has creado ningún snippet. Guarda tus códigos más usados para tenerlos siempre a la mano.
+          }
+        </p>
+        @if (!searchQuery().trim()) {
+          <p-button 
+            label="Crear mi primer Snippet" 
+            icon="pi pi-plus" 
+            [routerLink]="['/snippets/new']">
+          </p-button>
+        }
+      </div>
+    }
+  }
+</div>

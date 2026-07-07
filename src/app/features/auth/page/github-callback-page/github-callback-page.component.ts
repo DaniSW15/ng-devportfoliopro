@@ -28,7 +28,7 @@ import { AuthFacade } from '../../services/auth.facade';
       height: 100vh;
       font-size: 1.25rem;
       color: #888;
-    }
+    },
   `],
 })
 export class GithubCallbackPageComponent implements OnInit {

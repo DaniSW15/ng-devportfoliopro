@@ -1,1 +1,120 @@
-<p>uuid-generator works!</p>
+<div class="tool-container">
+  <h2>Generador de UUID / GUID 🆔</h2>
+  <p class="subtitle font-normal">Genera identificadores únicos universales (UUID) de versión v1, v4 o v5 de forma unitaria o en lotes.</p>
+
+  <div class="tool-card">
+    <div class="flex flex-col md:flex-row gap-6">
+      
+      <!-- Versión del UUID -->
+      <div class="option-field flex-1">
+        <label for="uuid-version">Versión del UUID</label>
+        <select 
+          id="uuid-version"
+          class="custom-select w-full"
+          [ngModel]="uuidVersion()" 
+          (ngModelChange)="uuidVersion.set($event)">
+          <option value="v4">UUID v4 (Aleatorio - Recomendado)</option>
+          <option value="v1">UUID v1 (Basado en tiempo/MAC)</option>
+        </select>
+      </div>
+
+      <!-- Cantidad si es Bulk -->
+      @if (isBulk()) {
+        <div class="option-field flex-1">
+          <label for="uuid-count">Cantidad a Generar</label>
+          <select 
+            id="uuid-count"
+            class="custom-select w-full"
+            [ngModel]="bulkCount()" 
+            (ngModelChange)="bulkCount.set(Number($event))">
+            <option [value]="5">5 UUIDs</option>
+            <option [value]="10">10 UUIDs</option>
+            <option [value]="20">20 UUIDs</option>
+            <option [value]="50">50 UUIDs</option>
+          </select>
+        </div>
+      }
+    </div>
+
+    <!-- Generación en lote (Checkbox) -->
+    <div class="checkbox-field flex items-center gap-2 mt-4 p-3 checkbox-group rounded-xl">
+      <p-checkbox 
+        [binary]="true" 
+        id="is-bulk-chk"
+        [ngModel]="isBulk()" 
+        (ngModelChange)="isBulk.set($event)">
+      </p-checkbox>
+      <label for="is-bulk-chk" class="p-checkbox-label m-0">Generar múltiples UUIDs a la vez</label>
+    </div>
+
+    <div class="action-section mt-6">
+      <p-button 
+        label="Generar UUID" 
+        icon="pi pi-bolt" 
+        [loading]="toolFacade.isLoading()"
+        (onClick)="onGenerate()" 
+        class="w-full">
+      </p-button>
+    </div>
+
+    @if (toolFacade.error()) {
+      <div class="error-section">
+        <p-message severity="error" [text]="toolFacade.error()!"></p-message>
+      </div>
+    }
+
+    <!-- Visualizador de Resultados -->
+    @if (toolFacade.uuidResult(); as result) {
+      
+      <!-- Resultado Único -->
+      @if (isSingleResponse(result)) {
+        <div class="result-section mt-4">
+          <div class="flex justify-between items-center mb-2">
+            <span class="result-label m-0">UUID {{ asSingle(result).version | uppercase }} Generado</span>
+            <p-button 
+              [icon]="copiedIndex() === 0 ? 'pi pi-check' : 'pi pi-copy'" 
+              [label]="copiedIndex() === 0 ? 'Copiado!' : 'Copiar'"
+              [severity]="copiedIndex() === 0 ? 'success' : 'secondary'" 
+              (onClick)="copySingle(asSingle(result).uuid, 0)">
+            </p-button>
+          </div>
+          
+          <div class="code-block font-mono text-lg text-center font-bold text-indigo-400">
+            {{ asSingle(result).uuid }}
+          </div>
+        </div>
+      }
+
+      <!-- Resultado Bulk (Múltiples) -->
+      @if (isBulkResponse(result)) {
+        <div class="result-section mt-4">
+          <div class="flex justify-between items-center mb-4">
+            <span class="result-label m-0">{{ asBulk(result).count }} UUIDs Generados</span>
+            <p-button 
+              [icon]="copiedAll() ? 'pi pi-check' : 'pi pi-copy'" 
+              [label]="copiedAll() ? 'Copiado todo!' : 'Copiar Todos'"
+              [severity]="copiedAll() ? 'success' : 'secondary'" 
+              (onClick)="copyAll(asBulk(result).uuids)">
+            </p-button>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            @for (uuid of asBulk(result).uuids; track uuid; let idx = $index) {
+              <div class="uuid-row flex justify-between items-center p-3 rounded-lg border border-slate-700/40 bg-slate-800/10 font-mono text-sm">
+                <span class="text-indigo-300">{{ uuid }}</span>
+                <p-button 
+                  [icon]="copiedIndex() === idx ? 'pi pi-check' : 'pi pi-copy'" 
+                  [severity]="copiedIndex() === idx ? 'success' : 'secondary'"
+                  [text]="true"
+                  (onClick)="copySingle(uuid, idx)"
+                  title="Copiar UUID">
+                </p-button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+    }
+  </div>
+</div>

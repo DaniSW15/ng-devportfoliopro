@@ -1,1 +1,128 @@
-<p>plans-page works!</p>
+<div class="billing-container">
+  <div class="header-section text-center mb-8">
+    <h2>Elige tu Plan 🚀</h2>
+    <p class="subtitle">Desbloquea límites más altos de peticiones y acceso exclusivo a herramientas avanzadas.</p>
+    
+    <div class="mt-4">
+      <p-button 
+        label="Gestionar Suscripción Existente (Portal Stripe)" 
+        icon="pi pi-user" 
+        severity="secondary"
+        [loading]="facade.isLoading()"
+        (onClick)="onOpenBillingPortal()">
+      </p-button>
+    </div>
+  </div>
+
+  @if (facade.error()) {
+    <div class="mb-6 flex justify-center">
+      <p-message severity="error" [text]="facade.error()!"></p-message>
+    </div>
+  }
+
+  <!-- GRID DE PLANES -->
+  @if (facade.isLoading() && !facade.plans()) {
+    <div class="flex justify-center p-12">
+      <i class="pi pi-spin pi-spinner text-4xl text-indigo-500"></i>
+    </div>
+  } @else if (facade.plans(); as plans) {
+    <div class="plans-grid">
+      
+      <!-- PLAN FREE -->
+      <div class="plan-card">
+        <div class="plan-header">
+          <span class="plan-badge bg-slate-500/10 text-slate-400">Básico</span>
+          <h3>Plan Free</h3>
+          <div class="price-container">
+            <span class="currency">$</span>
+            <span class="amount">{{ plans.free.price }}</span>
+            <span class="period">/siempre</span>
+          </div>
+        </div>
+
+        <ul class="features-list">
+          @for (feature of plans.free.features; track feature) {
+            <li>
+              <i class="pi pi-check text-green-500 mr-2"></i>
+              <span>{{ feature }}</span>
+            </li>
+          }
+        </ul>
+
+        <div class="plan-action">
+          <p-button 
+            label="Plan Actual" 
+            severity="secondary" 
+            [disabled]="true" 
+            class="w-full">
+          </p-button>
+        </div>
+      </div>
+
+      <!-- PLAN PREMIUM -->
+      <div class="plan-card premium-card">
+        <div class="popular-tag">Popular ★</div>
+        <div class="plan-header">
+          <span class="plan-badge bg-indigo-500/10 text-indigo-400">Recomendado</span>
+          <h3>Plan Premium</h3>
+          <div class="price-container">
+            <span class="currency">$</span>
+            <span class="amount">{{ plans.premium.price }}</span>
+            <span class="period">/mes</span>
+          </div>
+        </div>
+
+        <ul class="features-list">
+          @for (feature of plans.premium.features; track feature) {
+            <li>
+              <i class="pi pi-check text-green-400 mr-2"></i>
+              <span>{{ feature }}</span>
+            </li>
+          }
+        </ul>
+
+        <div class="plan-action">
+          <p-button 
+            label="Suscribirse a Premium" 
+            [loading]="facade.isLoading()"
+            (onClick)="onSelectPlan('premium')" 
+            class="w-full">
+          </p-button>
+        </div>
+      </div>
+
+      <!-- PLAN ENTERPRISE -->
+      <div class="plan-card">
+        <div class="plan-header">
+          <span class="plan-badge bg-purple-500/10 text-purple-400">Empresas</span>
+          <h3>Plan Enterprise</h3>
+          <div class="price-container">
+            <span class="currency">$</span>
+            <span class="amount">{{ plans.enterprise.price }}</span>
+            <span class="period">/mes</span>
+          </div>
+        </div>
+
+        <ul class="features-list">
+          @for (feature of plans.enterprise.features; track feature) {
+            <li>
+              <i class="pi pi-check text-green-500 mr-2"></i>
+              <span>{{ feature }}</span>
+            </li>
+          }
+        </ul>
+
+        <div class="plan-action">
+          <p-button 
+            label="Contactar a Enterprise" 
+            severity="secondary"
+            [loading]="facade.isLoading()"
+            (onClick)="onSelectPlan('enterprise')" 
+            class="w-full">
+          </p-button>
+        </div>
+      </div>
+
+    </div>
+  }
+</div>

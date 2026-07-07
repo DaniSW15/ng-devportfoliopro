@@ -1,1 +1,70 @@
-<p>snippet-card works!</p>
+<div class="snippet-card-wrapper" [routerLink]="['/snippets', snippet().id]">
+  <div class="card-header flex justify-between items-start mb-3">
+    <div class="title-area">
+      <h4 class="snippet-title text-lg font-bold text-white mb-1">{{ snippet().title }}</h4>
+      <span class="language-badge">{{ snippet().language | uppercase }}</span>
+    </div>
+    
+    <div class="visibility-area">
+      <span class="visibility-badge" [ngClass]="snippet().isPublic ? 'public' : 'private'">
+        <i class="pi" [ngClass]="snippet().isPublic ? 'pi-globe' : 'pi-lock'"></i>
+        {{ snippet().isPublic ? 'Público' : 'Privado' }}
+      </span>
+    </div>
+  </div>
+
+  @if (snippet().description) {
+    <p class="snippet-description text-sm text-slate-400 mb-4 line-clamp-2">
+      {{ snippet().description }}
+    </p>
+  } @else {
+    <p class="snippet-description text-sm text-slate-500 italic mb-4">
+      Sin descripción proporcionada.
+    </p>
+  }
+
+  <!-- Vista previa corta del código -->
+  <div class="code-preview mb-4">
+    <pre><code>{{ snippet().content }}</code></pre>
+  </div>
+
+  <!-- Footer de la tarjeta: Tags y Botones -->
+  <div class="card-footer flex justify-between items-center border-t border-slate-700/40 pt-3 mt-auto">
+    <div class="tags-area flex flex-wrap gap-1">
+      @if (snippet().tags && snippet().tags.length > 0) {
+        @for (tag of snippet().tags; track tag) {
+          <span class="tag-badge">#{{ tag }}</span>
+        }
+      } @else {
+        <span class="no-tags text-xs text-slate-600">Sin etiquetas</span>
+      }
+    </div>
+
+    <div class="actions-area flex gap-2">
+      <p-button 
+        [icon]="copied() ? 'pi pi-check' : 'pi pi-copy'" 
+        [severity]="copied() ? 'success' : 'secondary'"
+        [text]="true"
+        (onClick)="copyToClipboard($event)"
+        title="Copiar código">
+      </p-button>
+
+      <p-button 
+        icon="pi pi-pencil" 
+        severity="secondary" 
+        [text]="true"
+        [routerLink]="['/snippets/edit', snippet().id]"
+        (onClick)="$event.stopPropagation()"
+        title="Editar snippet">
+      </p-button>
+
+      <p-button 
+        icon="pi pi-trash" 
+        severity="danger" 
+        [text]="true"
+        (onClick)="onDelete($event)"
+        title="Eliminar snippet">
+      </p-button>
+    </div>
+  </div>
+</div>

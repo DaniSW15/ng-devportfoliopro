@@ -1,1 +1,131 @@
-<p>snippet-editor works!</p>
+<div class="snippets-container">
+  <div class="header-section mb-6">
+    <h2>{{ isEditMode ? 'Editar Snippet ✏️' : 'Crear Snippet ➕' }}</h2>
+    <p class="subtitle m-0">
+      {{ isEditMode ? 'Modifica los campos del snippet y guarda los cambios.' : 'Guarda un nuevo fragmento de código para usarlo más adelante.' }}
+    </p>
+  </div>
+
+  <!-- Mensaje de Error -->
+  @if (facade.error()) {
+    <div class="mb-4">
+      <p-message severity="error" [text]="facade.error()!"></p-message>
+    </div>
+  }
+
+  <div class="tool-card">
+    <form (submit)="onSubmit(); $event.preventDefault()" class="flex flex-col gap-6">
+      
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- Título -->
+        <div class="option-field flex-grow">
+          <label for="title">Título del Snippet *</label>
+          <input 
+            pInputText 
+            id="title" 
+            placeholder="ej. Algoritmo de Búsqueda Binaria" 
+            [ngModel]="title()" 
+            (ngModelChange)="title.set($event)"
+            required
+            class="w-full" />
+        </div>
+
+        <!-- Lenguaje -->
+        <div class="option-field md:w-1/3">
+          <label for="language">Lenguaje *</label>
+          <select 
+            id="language"
+            class="custom-select w-full"
+            [ngModel]="language()" 
+            (ngModelChange)="language.set($event)">
+            <option value="javascript">JavaScript</option>
+            <option value="typescript">TypeScript</option>
+            <option value="python">Python</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="scss">SCSS</option>
+            <option value="sql">SQL</option>
+            <option value="json">JSON</option>
+            <option value="rust">Rust</option>
+            <option value="go">Go</option>
+            <option value="cpp">C++</option>
+            <option value="java">Java</option>
+            <option value="csharp">C#</option>
+            <option value="bash">Bash / Shell</option>
+            <option value="markdown">Markdown</option>
+            <option value="php">PHP</option>
+            <option value="ruby">Ruby</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="option-field">
+        <label for="description">Descripción</label>
+        <textarea 
+          pTextarea 
+          id="description" 
+          rows="3" 
+          placeholder="Describe brevemente qué hace este fragmento de código..." 
+          [ngModel]="description()" 
+          (ngModelChange)="description.set($event)"
+          [autoResize]="true"
+          class="w-full"></textarea>
+      </div>
+
+      <!-- Código -->
+      <div class="option-field">
+        <label for="content">Código del Snippet *</label>
+        <textarea 
+          pTextarea 
+          id="content" 
+          rows="10" 
+          placeholder="Pega o escribe tu fragmento de código aquí..." 
+          [ngModel]="content()" 
+          (ngModelChange)="content.set($event)"
+          required
+          class="w-full code-editor-textarea font-mono"></textarea>
+      </div>
+
+      <!-- Etiquetas -->
+      <div class="option-field">
+        <label for="tags">Etiquetas (separadas por comas)</label>
+        <input 
+          pInputText 
+          id="tags" 
+          placeholder="ej. frontend, helpers, arrays, utils" 
+          [ngModel]="tagsInput()" 
+          (ngModelChange)="tagsInput.set($event)"
+          class="w-full" />
+      </div>
+
+      <!-- Visibilidad -->
+      <div class="flex items-center gap-2 checkbox-field">
+        <p-checkbox 
+          id="isPublic" 
+          [binary]="true" 
+          [ngModel]="isPublic()" 
+          (ngModelChange)="isPublic.set($event || false)"
+          label="Hacer este snippet público (otros usuarios podrán verlo)">
+        </p-checkbox>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="flex justify-end gap-4 border-t border-slate-700/50 pt-6 mt-4">
+        <p-button 
+          label="Cancelar" 
+          severity="secondary" 
+          [routerLink]="['/snippets']">
+        </p-button>
+        <p-button 
+          type="submit"
+          [label]="isEditMode ? 'Guardar Cambios' : 'Crear Snippet'" 
+          icon="pi pi-check"
+          [loading]="facade.isLoading()"
+          [disabled]="!title().trim() || !content().trim()">
+        </p-button>
+      </div>
+
+    </form>
+  </div>
+</div>

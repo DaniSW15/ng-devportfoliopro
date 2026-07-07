@@ -3,7 +3,6 @@
     <p class="subtitle">Formatea, limpia, minifica y valida tus cadenas JSON en tiempo real.</p>
 
     <div class="tool-card">
-        <!-- Entrada de JSON crudo -->
         <div class="option-field">
             <label for="json-input">Escribe o pega tu JSON aquí</label>
             <textarea id="json-input" class="w-full p-inputtext font-mono text-sm" rows="8"
@@ -12,7 +11,6 @@
       </textarea>
         </div>
 
-        <!-- Botones de Acción -->
         <div class="action-buttons flex gap-3 mt-4">
             <p-button label="Formatear (2 Espacios)" icon="pi pi-code" [loading]="toolFacade.isLoading()"
                 (onClick)="onFormat()" class="flex-1">
@@ -23,15 +21,21 @@
             </p-button>
         </div>
 
-        <!-- Mensaje de Error en caso de JSON Inválido -->
         @if (toolFacade.error()) {
         <div class="error-section mt-4">
             <p-message severity="error" [text]="toolFacade.error()!"></p-message>
         </div>
         }
 
-        <!-- Resultado Formateado -->
         @if (toolFacade.jsonResult(); as result) {
+        <!-- Alerta si el JSON es inválido o tiene error de sintaxis -->
+        @if (!result.success && result.error) {
+        <div class="error-section mt-4">
+            <p-message severity="error" [text]="'JSON Inválido: ' + result.error"></p-message>
+        </div>
+        }
+
+        @if (result.success) {
         <div class="result-section mt-4">
             <div class="flex justify-between items-center mb-2">
                 <label class="result-label m-0">JSON Procesado</label>
@@ -44,6 +48,7 @@
                 <pre><code>{{ result.result }}</code></pre>
             </div>
         </div>
+        }
         }
     </div>
 </div>

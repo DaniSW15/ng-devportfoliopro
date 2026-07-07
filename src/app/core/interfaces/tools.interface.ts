@@ -187,6 +187,7 @@ export interface ApiTesterResponse {
 }
 
 export interface SaveRequestPayload {
+    id?: string;
     name: string;
     description?: string;
     tags?: string[];

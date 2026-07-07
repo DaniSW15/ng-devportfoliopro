@@ -1,1 +1,87 @@
-<p>color-palette works!</p>
+<div class="tool-container">
+  <h2>Generador de Paletas de Colores 🎨</h2>
+  <p class="subtitle">Selecciona un color base y el tipo de armonía para generar esquemas de color premium.</p>
+
+  <div class="tool-card">
+    <div class="flex flex-col md:flex-row gap-6">
+      
+      <!-- Color Picker -->
+      <div class="option-field flex-1">
+        <label for="base-color">Color Base</label>
+        <div class="flex gap-3">
+          <input 
+            type="color" 
+            id="base-color" 
+            [ngModel]="baseColor()"
+            (ngModelChange)="baseColor.set($event)" 
+            class="color-picker-input" />
+          <input 
+            type="text" 
+            pInputText 
+            [ngModel]="baseColor()"
+            (ngModelChange)="baseColor.set($event)" 
+            placeholder="#6366f1"
+            class="flex-1 font-mono" />
+        </div>
+      </div>
+
+      <!-- Armonía de color (Tipo) -->
+      <div class="option-field flex-grow-[2]">
+        <label>Armonía de Color</label>
+        <select 
+          class="custom-select w-full"
+          [ngModel]="paletteType()" 
+          (ngModelChange)="paletteType.set($event)">
+          <option value="monochromatic">Monocromático (Escala tonal)</option>
+          <option value="analogous">Colores Análogos (Vecinos en círculo cromático)</option>
+          <option value="complementary">Colores Complementarios (Opuestos directos)</option>
+          <option value="triadic">Tríada de Colores (Equidistantes a 120°)</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="action-section">
+      <p-button 
+        label="Generar Paleta" 
+        icon="pi pi-palette" 
+        [loading]="toolFacade.isLoading()"
+        (onClick)="onGenerate()" 
+        class="w-full">
+      </p-button>
+    </div>
+
+    @if (toolFacade.error()) {
+      <div class="error-section">
+        <p-message severity="error" [text]="toolFacade.error()!"></p-message>
+      </div>
+    }
+
+    <!-- Visualizador de la Paleta Resultante -->
+    @if (toolFacade.paletteResult(); as result) {
+      <div class="result-section">
+        <span class="result-label">Paleta Generada (Haz clic para copiar)</span>
+        
+        <div class="palette-colors-row flex flex-wrap gap-4 mt-3">
+          @for (color of result.palette; track color) {
+            <div 
+              class="color-swatch-card flex-1 min-w-[80px]"
+              (click)="copyColor(color)">
+              <div 
+                class="swatch-color" 
+                [style.background-color]="color">
+                @if (copiedColor() === color) {
+                  <span class="copied-badge"><i class="pi pi-check text-xs"></i> Copiado</span>
+                }
+              </div>
+              <div class="swatch-info text-center py-2 font-mono text-sm">
+                {{ color | uppercase }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

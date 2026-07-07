@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables';
 
 body {
   margin: 0;
@@ -72,9 +72,86 @@ label.p-checkbox-label {
   -webkit-backdrop-filter: var(--backdrop-blur) !important;
   border: 1px solid var(--border-color) !important;
   box-shadow: var(--box-shadow-premium) !important;
+  border-radius: 20px;
+  padding: 2.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .checkbox-group {
   background: rgba(255, 255, 255, 0.02) !important; // Fondo gris neutro traslúcido
   border: 1px solid rgba(255, 255, 255, 0.1) !important; // Borde sutil blanco
+}
+
+// Estructura estructural compartida para todas las herramientas
+.tool-container {
+  max-width: 750px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+
+  h2 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    text-align: center;
+    letter-spacing: -0.025em;
+  }
+
+  .subtitle {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+}
+
+.option-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+
+  label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-color);
+  }
+}
+
+.action-section {
+  margin: 2rem 0 1.5rem;
+}
+
+.error-section {
+  margin-bottom: 1.5rem;
+}
+
+.result-section {
+  background: rgba(15, 23, 42, 0.25);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.75rem;
+  margin-top: 2.5rem;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  .result-label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.075em;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

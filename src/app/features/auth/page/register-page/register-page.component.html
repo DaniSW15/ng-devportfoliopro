@@ -1,97 +1,195 @@
-<section class="register-container">
-    <form [formRoot]="registerForm">
-        <div class="form-header">
-            <h1>Create Account</h1>
-            <p>Join our developer portfolio community</p>
+<section class="auth-page">
+  <!-- Left Side: Graphic & Branding -->
+  <div class="auth-visual-side">
+    <div class="visual-content">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24" class="logo-svg" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"></polyline>
+          <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        <span class="brand-name">DevPortfolio <span class="highlight">Pro</span></span>
+      </div>
+      
+      <div class="illustration-container">
+        <div class="glowing-orb purple-orb"></div>
+        <div class="glowing-orb cyan-orb"></div>
+        <div class="network-graphic">
+          <div class="node central-node">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
+          </div>
+          <div class="connections">
+            <span class="line line-1"></span>
+            <span class="line line-2"></span>
+            <span class="line line-3"></span>
+          </div>
+          <div class="node peripheral-node node-1">🚀</div>
+          <div class="node peripheral-node node-2">💻</div>
+          <div class="node peripheral-node node-3">🔑</div>
         </div>
+      </div>
+      
+      <p class="visual-tagline">Tu espacio unificado para probar APIs, gestionar llaves, almacenar snippets y optimizar tu flujo de desarrollo.</p>
+    </div>
+  </div>
 
-        <!-- Success Message -->
-        @if (registerSuccess()) {
-        <p-message severity="success" text="Registration successful! Redirecting to login..."
-            [style]="{ width: '100%' }" />
-        }
+  <!-- Right Side: Register Card -->
+  <div class="auth-card-side">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h2>Crear Cuenta</h2>
+        <p class="auth-subtitle">Únete a la comunidad de DevPortfolio Pro</p>
+      </div>
 
-        <!-- Error Message -->
-        @if (registerError()) {
-        <p-message severity="error" text="Registration failed. Please try again." [style]="{ width: '100%' }" />
-        }
+      <!-- GitHub OAuth Button -->
+      <a [href]="githubOAuthUrl" class="btn-github">
+        <svg viewBox="0 0 24 24" class="github-icon" fill="currentColor">
+          <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+        </svg>
+        <span>Registrarse con GitHub</span>
+      </a>
 
-        <!-- Email Field -->
-        <div class="form-field">
-            <label for="email" class="form-label">Email</label>
-            <p-inputGroup>
-                <input pInputText id="email" type="email" [formField]="registerForm.email"
-                    placeholder="your@email.com" class="w-full" />
-            </p-inputGroup>
+      <div class="divider">
+        <span>o regístrate con email</span>
+      </div>
+
+      <!-- Success Message -->
+      @if (registerSuccess()) {
+        <div class="auth-success">
+          <span>¡Registro exitoso! Redirigiendo al login...</span>
+        </div>
+      }
+
+      <!-- Error Message -->
+      @if (registerError()) {
+        <div class="auth-error">
+          <span>Error en el registro. Intenta de nuevo.</span>
+        </div>
+      }
+
+      <!-- Register Form -->
+      <form [formRoot]="registerForm">
+        <div class="auth-form">
+          <!-- Email Field -->
+          <div class="form-field">
+            <label for="email">Dirección de Email</label>
+            <div class="input-wrapper">
+              <svg viewBox="0 0 24 24" class="input-icon" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <input
+                pInputText
+                id="email"
+                type="email"
+                [formField]="registerForm.email"
+                placeholder="user@email.com"
+                autocomplete="email"
+              />
+            </div>
             @if (registerForm.email().invalid()) {
-            <small class="error-message">
+              <small class="field-error">
                 @for (error of registerForm.email().errors(); track error) {
-                <span>{{ error.message }}</span>
+                  <span>{{ error.message }}</span>
                 }
-            </small>
+              </small>
             }
-        </div>
+          </div>
 
-        <!-- Name Field -->
-        <div class="form-field">
-            <label for="name" class="form-label">Full Name</label>
-            <p-inputGroup>
-                <input pInputText id="name" type="text" [formField]="registerForm.name" placeholder="Your Name"
-                    class="w-full" />
-            </p-inputGroup>
+          <!-- Name Field -->
+          <div class="form-field">
+            <label for="name">Nombre Completo</label>
+            <div class="input-wrapper">
+              <svg viewBox="0 0 24 24" class="input-icon" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <input
+                pInputText
+                id="name"
+                type="text"
+                [formField]="registerForm.name"
+                placeholder="Tu nombre completo"
+                autocomplete="name"
+              />
+            </div>
             @if (registerForm.name().invalid()) {
-            <small class="error-message">
+              <small class="field-error">
                 @for (error of registerForm.name().errors(); track error) {
-                <span>{{ error.message }}</span>
+                  <span>{{ error.message }}</span>
                 }
-            </small>
+              </small>
             }
-        </div>
+          </div>
 
-        <!-- Password Field -->
-        <div class="form-field">
-            <label for="password" class="form-label">Password</label>
-            <p-inputGroup>
-                <input pInputText id="password" type="password" [formField]="registerForm.password"
-                    placeholder="At least 8 characters" class="w-full" />
-            </p-inputGroup>
+          <!-- Password Field -->
+          <div class="form-field">
+            <label for="password">Contraseña</label>
+            <div class="input-wrapper">
+              <svg viewBox="0 0 24 24" class="input-icon" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <input
+                pInputText
+                id="password"
+                type="password"
+                [formField]="registerForm.password"
+                placeholder="Mínimo 8 caracteres"
+                autocomplete="new-password"
+              />
+            </div>
             @if (registerForm.password().invalid()) {
-            <small class="error-message">
+              <small class="field-error">
                 @for (error of registerForm.password().errors(); track error) {
-                <span>{{ error.message }}</span>
+                  <span>{{ error.message }}</span>
                 }
-            </small>
+              </small>
             }
-        </div>
+          </div>
 
-        <!-- GitHub Username Field -->
-        <div class="form-field">
-            <label for="githubUsername" class="form-label">GitHub Username</label>
-            <p-inputGroup>
-                <input pInputText id="githubUsername" type="text" [formField]="registerForm.githubUsername"
-                    placeholder="your-github-username" class="w-full" />
-            </p-inputGroup>
+          <!-- GitHub Username Field -->
+          <div class="form-field">
+            <label for="githubUsername">Usuario de GitHub</label>
+            <div class="input-wrapper">
+              <svg viewBox="0 0 24 24" class="input-icon" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+              </svg>
+              <input
+                pInputText
+                id="githubUsername"
+                type="text"
+                [formField]="registerForm.githubUsername"
+                placeholder="tu-usuario-github"
+                autocomplete="username"
+              />
+            </div>
             @if (registerForm.githubUsername().invalid()) {
-            <small class="error-message">
+              <small class="field-error">
                 @for (error of registerForm.githubUsername().errors(); track error) {
-                <span>{{ error.message }}</span>
+                  <span>{{ error.message }}</span>
                 }
-            </small>
+              </small>
             }
-        </div>
+          </div>
 
-        <!-- Submit Button -->
-        <div class="form-actions">
-            <p-button label="Create Account" type="submit" [disabled]="registerForm().invalid()"
-                [loading]="authFacade.isLoading()" class="w-full" />
+          <!-- Submit Button -->
+          <button type="submit" class="btn-submit" [disabled]="registerForm().invalid() || authFacade.isLoading()">
+            @if (authFacade.isLoading()) {
+              <svg data-p-icon="spinner" class="animate-spin icon-sm"></svg>
+              <span>Creando cuenta...</span>
+            } @else {
+              <span>Crear Cuenta</span>
+            }
+          </button>
         </div>
+      </form>
 
-        <!-- Login Link -->
-        <div class="form-footer">
-            <p>
-                Already have an account?
-                <a routerLink="/auth/login" class="link">Sign in</a>
-            </p>
-        </div>
-    </form>
+      <!-- Login Link -->
+      <div class="auth-footer">
+        <p>¿Ya tienes cuenta? <a routerLink="/auth/login">Inicia sesión</a></p>
+      </div>
+    </div>
+  </div>
 </section>

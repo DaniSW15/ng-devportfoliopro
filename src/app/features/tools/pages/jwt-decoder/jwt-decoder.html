@@ -1,9 +1,8 @@
 <div class="tool-container">
     <h2>Decodificador JWT 🎫</h2>
-    <p class="subtitle">Pega un JSON Web Token para ver su encabezado, firma y datos internos.</p>
+    <p class="subtitle">Pega un JSON Web Token para ver su encabezado, payload y firma en texto plano.</p>
 
     <div class="tool-card">
-        <!-- Entrada de Texto -->
         <div class="option-field">
             <label for="jwt-token">Pegar Token JWT</label>
             <textarea id="jwt-token" class="w-full p-inputtext font-mono text-sm" rows="6"
@@ -12,24 +11,20 @@
       </textarea>
         </div>
 
-        <!-- Botón de Acción -->
         <div class="action-section">
             <p-button label="Decodificar Token" icon="pi pi-bolt" [loading]="toolFacade.isLoading()"
                 (onClick)="onDecode()" class="w-full">
             </p-button>
         </div>
 
-        <!-- Mensaje de Error (si el token es inválido) -->
         @if (toolFacade.error()) {
         <div class="error-section">
             <p-message severity="error" [text]="toolFacade.error()!"></p-message>
         </div>
         }
 
-        <!-- Resultados -->
         @if (toolFacade.jwtResult(); as result) {
         <div class="result-section">
-
             <!-- Estado del Token (Expiración) -->
             <div class="token-status mb-4">
                 <p-message [severity]="isExpired(getExpiration(result.payload)) ? 'error' : 'success'"
@@ -37,20 +32,25 @@
                 </p-message>
             </div>
 
-            <div class="grid-results">
-                <!-- Bloque Header -->
-                <div class="code-block">
+            <div class="grid-results flex flex-col gap-4">
+                <!-- Header -->
+                <div class="code-block border-l-4 border-orange-500">
                     <span class="block-title text-orange-400">Header (Algoritmo y Tipo)</span>
                     <pre><code>{{ result.header | json }}</code></pre>
                 </div>
 
-                <!-- Bloque Payload -->
-                <div class="code-block mt-4">
+                <!-- Payload -->
+                <div class="code-block border-l-4 border-blue-500">
                     <span class="block-title text-blue-400">Payload (Datos del Usuario)</span>
                     <pre><code>{{ result.payload | json }}</code></pre>
                 </div>
-            </div>
 
+                <!-- Signature -->
+                <div class="code-block border-l-4 border-pink-500">
+                    <span class="block-title text-pink-400">Signature (Firma Criptográfica)</span>
+                    <pre><code class="break-all">{{ result.signature }}</code></pre>
+                </div>
+            </div>
         </div>
         }
     </div>

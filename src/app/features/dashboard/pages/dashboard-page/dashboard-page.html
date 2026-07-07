@@ -1,2 +1,54 @@
-<p>dashboard-page works!</p>
-<p-button (click)="logout()">Logout</p-button>
+<div class="dashboard-container">
+  <!-- Cabecera de bienvenida -->
+  <div class="welcome-banner mb-8">
+    <div class="flex items-center gap-4">
+      <span class="avatar-icon">💻</span>
+      <div>
+        <h2>¡Te damos la bienvenida a DevPortfolio Pro!</h2>
+        <p class="subtitle m-0">Accede rápidamente a tus herramientas de desarrollo favoritas y administra tus
+          credenciales.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rejilla del HUB de herramientas -->
+  <div class="tools-grid">
+    @for (tool of tools; track tool.title) {
+    <div class="hub-card" (click)="onNavigate(tool.route)">
+
+      <div class="hub-header flex justify-between items-start mb-4">
+        <div class="icon-wrapper">
+          @switch (tool.route) {
+          @case ('/tools/password-generator') { <svg data-p-icon="key"></svg> }
+          @case ('/tools/jwt-decoder') { <svg data-p-icon="shield"></svg> }
+          @case ('/tools/json-formatter') { <svg data-p-icon="code"></svg> }
+          @case ('/tools/color-palette') { <svg data-p-icon="palette"></svg> }
+          @case ('/tools/base64-tool') { <svg data-p-icon="lock"></svg> }
+          @case ('/tools/qr-generator') { <svg data-p-icon="qrcode"></svg> }
+          @case ('/tools/timestamp-converter') { <svg data-p-icon="clock"></svg> }
+          @case ('/tools/uuid-generator') { <svg data-p-icon="bolt"></svg> }
+          @case ('/api-keys') { <svg data-p-icon="cog"></svg> }
+          @case ('/billing') { <svg data-p-icon="credit-card"></svg> }
+          @case ('/snippets') { <svg data-p-icon="file"></svg> }
+          @case ('/api-tester') { <svg data-p-icon="database"></svg> }
+          @default { <i class="pi pi-question"></i> }
+          }
+        </div>
+        @if (tool.badge) {
+        <span class="hub-badge" [ngClass]="tool.badgeClass || ''">
+          {{ tool.badge }}
+        </span>
+        }
+      </div>
+
+      <h3 class="hub-title">{{ tool.title }}</h3>
+      <p class="hub-description">{{ tool.description }}</p>
+
+      <div class="hub-footer mt-auto flex items-center gap-1 text-xs font-bold text-indigo-400">
+        <span>Abrir herramienta</span>
+        <i class="pi pi-arrow-right"></i>
+      </div>
+    </div>
+    }
+  </div>
+</div>

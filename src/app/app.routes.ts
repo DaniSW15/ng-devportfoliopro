@@ -25,6 +25,18 @@ export const routes: Routes = [
                 loadChildren: () => import('./features/api-keys/api-keys.routes').then((m) => m.apiKeysRoutes),
             },
             {
+                path: 'billing',
+                loadChildren: () => import('./features/billing/billing.routes').then((m) => m.billingRoutes),
+            },
+            {
+                path: 'snippets',
+                loadChildren: () => import('./features/snippets/snippets.routes').then((m) => m.snippetsRoutes),
+            },
+            {
+                path: 'api-tester',
+                loadChildren: () => import('./features/api-tester/api-tester.routes').then((m) => m.apiTesterRoutes),
+            },
+            {
                 path: '',
                 redirectTo: 'dashboard', // 👈 ¡RECOMENDADO! Apunta a la ruta principal
                 pathMatch: 'full',

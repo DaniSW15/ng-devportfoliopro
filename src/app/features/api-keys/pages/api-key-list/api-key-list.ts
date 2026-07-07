@@ -8,6 +8,9 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { ApiKeyResponse } from '@core/interfaces/api-key.interface';
+import { ChartBar as ChartBarIcon } from '@primeicons/angular/chart-bar';
+import { Ban } from '@primeicons/angular/ban';
+import { Trash } from '@primeicons/angular/trash';
 
 @Component({
   selector: 'app-api-key-list',
@@ -19,6 +22,9 @@ import { ApiKeyResponse } from '@core/interfaces/api-key.interface';
     DialogModule,
     InputTextModule,
     MessageModule,
+    ChartBarIcon,
+    Ban,
+    Trash,
   ],
   templateUrl: './api-key-list.html',
   styleUrl: './api-key-list.scss',

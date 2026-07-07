@@ -17,6 +17,10 @@ import { IToolsRepository } from '@core/domain/repositories/tools.repositories.i
 import { ToolsRepository } from '@core/infrastructure/repositories/tools.repository';
 import { ApiKeyRepositoryInterface } from '@core/domain/repositories/api-key.repositories.interface';
 import { ApiKeyRepository } from '@core/infrastructure/repositories/api-key.repository';
+import { BillingRepositoryInterface } from '@core/domain/repositories/billing.repositories.interface';
+import { BillingRepository } from '@core/infrastructure/repositories/billing.repository';
+import { IApiTesterRepository } from '@core/domain/repositories/api-tester.repositories.interface';
+import { ApiTesterRepository } from '@core/infrastructure/repositories/api-tester.repository';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -44,6 +48,14 @@ export const appConfig: ApplicationConfig = {
     {
       provide: ApiKeyRepositoryInterface,
       useClass: ApiKeyRepository,
+    },
+    {
+      provide: BillingRepositoryInterface,
+      useClass: BillingRepository,
+    },
+    {
+      provide: IApiTesterRepository,
+      useClass: ApiTesterRepository,
     },
     providePrimeNG({
       theme: {

@@ -23,7 +23,6 @@
     <p-table 
       [value]="facade.apiKeys()" 
       [loading]="facade.isLoading() && facade.apiKeys().length === 0"
-      responsiveLayout="scroll"
       class="custom-table">
       <ng-template pTemplate="header">
         <tr>
@@ -55,29 +54,29 @@
           <td class="text-right actions-cell">
             <div class="flex justify-end gap-2">
               <p-button 
-                icon="pi pi-chart-bar" 
                 severity="secondary" 
                 [text]="true"
                 (onClick)="showStats(key.id)"
                 title="Ver Estadísticas">
+                <svg data-p-icon="chart-bar"></svg>
               </p-button>
               
               @if (key.isActive) {
                 <p-button 
-                  icon="pi pi-ban" 
                   severity="warn" 
                   [text]="true"
                   (onClick)="onRevoke(key.id)"
                   title="Revocar Llave">
+                  <svg data-p-icon="ban"></svg>
                 </p-button>
               }
 
               <p-button 
-                icon="pi pi-trash" 
                 severity="danger" 
                 [text]="true"
                 (onClick)="onDelete(key.id)"
                 title="Eliminar permanentemente">
+                <svg data-p-icon="trash"></svg>
               </p-button>
             </div>
           </td>

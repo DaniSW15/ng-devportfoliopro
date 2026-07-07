@@ -1,0 +1,67 @@
+.snippets-container {
+  max-width: 1000px;
+  margin: 1rem auto;
+}
+
+.header-section {
+  h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-color);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+  }
+}
+
+.custom-select {
+  background: rgba(15, 23, 42, 0.4);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-color: var(--primary-color, #6366f1);
+  }
+
+  option {
+    background-color: var(--bg-color, #0f172a);
+    color: var(--text-color, #ffffff);
+  }
+}
+
+.code-editor-textarea {
+  font-family: 'Fira Code', 'Courier New', Courier, monospace !important;
+  background: rgba(15, 23, 42, 0.6) !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  letter-spacing: 0.02em;
+  color: #e2e8f0 !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+
+  &:focus {
+    background: rgba(15, 23, 42, 0.8) !important;
+    border-color: var(--primary-color, #6366f1) !important;
+  }
+}
+
+.checkbox-field {
+  margin-top: 0.5rem;
+  
+  ::ng-deep .p-checkbox-label {
+    font-weight: 500 !important;
+    font-size: 0.95rem !important;
+    color: var(--text-color) !important;
+  }
+}

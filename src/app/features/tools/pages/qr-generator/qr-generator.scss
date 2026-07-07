@@ -1,0 +1,36 @@
+.custom-select {
+  background: rgba(15, 23, 42, 0.4);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-color: var(--primary-color, #6366f1);
+  }
+
+  option {
+    background: #0f172a;
+    color: var(--text-color);
+  }
+}
+
+.qr-preview-box {
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+  
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+}

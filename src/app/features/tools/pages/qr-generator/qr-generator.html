@@ -1,1 +1,85 @@
-<p>qr-generator works!</p>
+<div class="tool-container">
+  <h2>Generador de Códigos QR 📷</h2>
+  <p class="subtitle">Ingresa cualquier texto o URL para generar al instante un código QR de alta resolución listo para descargar.</p>
+
+  <div class="tool-card">
+    <div class="option-field">
+      <label for="qr-text">Texto o URL a codificar</label>
+      <input 
+        id="qr-text" 
+        pInputText 
+        type="text"
+        placeholder="ej. https://github.com/DaniSW15" 
+        [ngModel]="qrText()"
+        (ngModelChange)="qrText.set($event)"
+        class="w-full" />
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6 mt-4">
+      <!-- Ancho del código QR -->
+      <div class="option-field flex-1">
+        <label for="qr-width">Tamaño (Ancho en px)</label>
+        <select 
+          id="qr-width"
+          class="custom-select w-full"
+          [ngModel]="qrWidth()" 
+          (ngModelChange)="qrWidth.set(Number($event))">
+          <option [value]="150">150 x 150 px</option>
+          <option [value]="250">250 x 250 px</option>
+          <option [value]="350">350 x 350 px</option>
+          <option [value]="500">500 x 500 px</option>
+        </select>
+      </div>
+
+      <!-- Formato de descarga -->
+      <div class="option-field flex-1">
+        <label for="qr-format">Formato de Imagen</label>
+        <select 
+          id="qr-format"
+          class="custom-select w-full"
+          [ngModel]="qrFormat()" 
+          (ngModelChange)="qrFormat.set($event)">
+          <option value="png">PNG (Transparente)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="action-section">
+      <p-button 
+        label="Generar Código QR" 
+        icon="pi pi-qrcode" 
+        [loading]="toolFacade.isLoading()"
+        [disabled]="!qrText().trim()"
+        (onClick)="onGenerate()" 
+        class="w-full">
+      </p-button>
+    </div>
+
+    @if (toolFacade.error()) {
+      <div class="error-section">
+        <p-message severity="error" [text]="toolFacade.error()!"></p-message>
+      </div>
+    }
+
+    <!-- Visualizador de Código QR -->
+    @if (toolFacade.qrResult(); as result) {
+      <div class="result-section flex flex-col items-center gap-4">
+        <span class="result-label text-center">Código QR Generado con Éxito</span>
+        
+        <div class="qr-preview-box p-4 bg-white border border-slate-700/50 rounded-xl flex justify-center items-center">
+          <img 
+            [src]="'data:' + result.mimeType + ';base64,' + result.qrCode" 
+            alt="Código QR Generado"
+            [style.width.px]="result.width"
+            [style.height.px]="result.width" />
+        </div>
+
+        <p-button 
+          label="Descargar QR" 
+          icon="pi pi-download" 
+          (onClick)="downloadQr(result.qrCode, result.format)">
+        </p-button>
+      </div>
+    }
+  </div>
+</div>

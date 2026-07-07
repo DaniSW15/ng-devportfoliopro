@@ -1,0 +1,299 @@
+<div class="api-tester-container">
+  <!-- Cabecera -->
+  <div class="api-tester-header mb-6">
+    <h2>Api Tester</h2>
+    <p class="subtitle">Prueba endpoints, inspecciona respuestas y administra colecciones de peticiones.</p>
+  </div>
+
+  <div class="api-tester-workspace">
+    <!-- Columna Izquierda: Historial -->
+    <div class="workspace-sidebar">
+      <div class="sidebar-header">
+        <span class="flex items-center gap-2">
+          <svg data-p-icon="history" class="icon-sm"></svg>
+          <h3>Historial</h3>
+        </span>
+        @if (facade.history().length > 0) {
+          <button class="btn-clear-history flex items-center gap-1" (click)="clearHistory()">
+            <svg data-p-icon="trash" class="icon-xs"></svg>
+            <span>Vaciar</span>
+          </button>
+        }
+      </div>
+
+      <div class="history-list custom-scrollbar">
+        @if (facade.history().length === 0) {
+          <div class="empty-state">
+            <p>No tienes peticiones guardadas.</p>
+          </div>
+        } @else {
+          @for (item of facade.history(); track item.id || $index) {
+            <div class="history-card" (click)="loadRequest(item)">
+              <div class="card-top">
+                <span class="method-badge" [ngClass]="item.request.method.toLowerCase()">
+                  {{ item.request.method }}
+                </span>
+                <span class="card-title">{{ item.name || 'Petición sin nombre' }}</span>
+                <button class="btn-delete-card" (click)="deleteHistory(item.id, $event)">
+                  <svg data-p-icon="trash" class="icon-xs"></svg>
+                </button>
+              </div>
+              <p class="card-url">{{ item.request.url }}</p>
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- Columna Derecha: Editor y Respuesta -->
+    <div class="workspace-content">
+      <!-- Editor de Petición -->
+      <div class="request-panel">
+        <div class="url-bar-container">
+          <select [ngModel]="method()" (ngModelChange)="method.set($event)" class="method-select">
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="PATCH">PATCH</option>
+            <option value="DELETE">DELETE</option>
+            <option value="HEAD">HEAD</option>
+            <option value="OPTIONS">OPTIONS</option>
+          </select>
+
+          <input 
+            type="text" 
+            [ngModel]="url()" 
+            (ngModelChange)="url.set($event)" 
+            placeholder="https://api.example.com/endpoint" 
+            class="url-input"
+          />
+
+          <button 
+            class="btn-send" 
+            (click)="sendRequest()" 
+            [disabled]="facade.isLoading() || !url()">
+            @if (facade.isLoading()) {
+              <svg data-p-icon="spinner" class="animate-spin"></svg>
+            } @else {
+              <svg data-p-icon="send"></svg>
+              <span>Enviar</span>
+            }
+          </button>
+
+          <button class="btn-save flex items-center gap-1" (click)="openSaveModal()">
+            <svg data-p-icon="save" class="icon-xs"></svg>
+            <span>Guardar</span>
+          </button>
+        </div>
+
+        <!-- Pestañas de Configuración de la Petición -->
+        <div class="config-tabs-container">
+          <div class="tabs-header">
+            <button 
+              class="tab-btn" 
+              [class.active]="activeTab() === 'headers'" 
+              (click)="activeTab.set('headers')">
+              Headers ({{ headers().length }})
+            </button>
+            <button 
+              class="tab-btn" 
+              [class.active]="activeTab() === 'body'" 
+              (click)="activeTab.set('body')">
+              Body ({{ bodyType() }})
+            </button>
+          </div>
+
+          <div class="tab-content">
+            <!-- Headers Tab -->
+            @if (activeTab() === 'headers') {
+              <div class="headers-tab">
+                <table class="headers-table">
+                  <thead>
+                    <tr>
+                      <th>Key</th>
+                      <th>Value</th>
+                      <th width="40px"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (header of headers(); track $index) {
+                      <tr>
+                        <td>
+                          <input 
+                            type="text" 
+                            [(ngModel)]="header.key" 
+                            placeholder="Header Key" 
+                            class="table-input"
+                          />
+                        </td>
+                        <td>
+                          <input 
+                            type="text" 
+                            [(ngModel)]="header.value" 
+                            placeholder="Header Value" 
+                            class="table-input"
+                          />
+                        </td>
+                        <td>
+                          <button class="btn-remove-row" (click)="removeHeader($index)">
+                            <svg data-p-icon="trash" class="icon-xs"></svg>
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+                <button class="btn-add-row mt-3" (click)="addHeader()">
+                  <svg data-p-icon="plus" class="icon-xs"></svg>
+                  <span>Agregar Header</span>
+                </button>
+              </div>
+            }
+
+            <!-- Body Tab -->
+            @if (activeTab() === 'body') {
+              <div class="body-tab">
+                <div class="body-types-select mb-3">
+                  <button 
+                    class="type-btn" 
+                    [class.active]="bodyType() === 'none'" 
+                    (click)="setBodyType('none')">none</button>
+                  <button 
+                    class="type-btn" 
+                    [class.active]="bodyType() === 'json'" 
+                    (click)="setBodyType('json')">json</button>
+                  <button 
+                    class="type-btn" 
+                    [class.active]="bodyType() === 'raw'" 
+                    (click)="setBodyType('raw')">raw</button>
+                  <button 
+                    class="type-btn" 
+                    [class.active]="bodyType() === 'graphql'" 
+                    (click)="setBodyType('graphql')">graphql</button>
+                </div>
+
+                @if (bodyType() === 'none') {
+                  <div class="body-empty-state">
+                    <p>Esta petición no tiene cuerpo.</p>
+                  </div>
+                }
+
+                @if (bodyType() === 'json' || bodyType() === 'raw') {
+                  <div class="body-editor-container">
+                    <textarea 
+                      [ngModel]="body()" 
+                      (ngModelChange)="body.set($event)" 
+                      class="code-textarea custom-scrollbar" 
+                      placeholder='{\n  "key": "value"\n}'
+                      spellcheck="false"
+                    ></textarea>
+                  </div>
+                }
+
+                @if (bodyType() === 'graphql') {
+                  <div class="graphql-editor-container">
+                    <div class="gql-query">
+                      <label>GraphQL Query</label>
+                      <textarea 
+                        [ngModel]="graphqlQuery()" 
+                        (ngModelChange)="graphqlQuery.set($event)" 
+                        class="code-textarea query-textarea custom-scrollbar" 
+                        placeholder="query { ... }"
+                        spellcheck="false"
+                      ></textarea>
+                    </div>
+                    <div class="gql-variables">
+                      <label>Variables (JSON)</label>
+                      <textarea 
+                        [ngModel]="graphqlVariables()" 
+                        (ngModelChange)="graphqlVariables.set($event)" 
+                        class="code-textarea vars-textarea custom-scrollbar" 
+                        placeholder='{\n  "id": 1\n}'
+                        spellcheck="false"
+                      ></textarea>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Visor de Respuesta -->
+      <div class="response-panel">
+        <div class="panel-header">
+          <h3>Respuesta</h3>
+          @if (facade.activeResponse()) {
+            <div class="response-meta">
+              <span class="status-badge" [ngClass]="facade.activeResponse()!.success ? 'success' : 'error'">
+                Status: {{ facade.activeResponse()!.status }} {{ facade.activeResponse()!.statusText }}
+              </span>
+              <span class="meta-item">Tiempo: {{ facade.activeResponse()!.time }} ms</span>
+              <span class="meta-item">Tamaño: {{ formatSize(facade.activeResponse()!.size) }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="response-body custom-scrollbar">
+          @if (facade.isLoading()) {
+            <div class="loading-state">
+              <svg data-p-icon="spinner" class="animate-spin icon-lg text-indigo-400"></svg>
+              <p>Enviando petición...</p>
+            </div>
+          } @else if (facade.activeResponse()) {
+            <pre class="response-code"><code>{{ getResponseString() }}</code></pre>
+          } @else if (facade.error()) {
+            <div class="error-state">
+              <p class="error-msg">{{ facade.error() }}</p>
+            </div>
+          } @else {
+            <div class="idle-state">
+              <p>Envía una petición para ver la respuesta aquí.</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Guardar Petición -->
+@if (showSaveModal()) {
+  <div class="modal-backdrop">
+    <div class="modal-content glass-card">
+      <div class="modal-header">
+        <h3>Guardar petición</h3>
+        <button class="btn-close" (click)="closeSaveModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group mb-4">
+          <label>Nombre de la petición <span class="text-red-500">*</span></label>
+          <input 
+            type="text" 
+            [ngModel]="saveName()" 
+            (ngModelChange)="saveName.set($event)" 
+            placeholder="Ej. Listar Usuarios" 
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-4">
+          <label>Descripción (Opcional)</label>
+          <textarea 
+            [ngModel]="saveDescription()" 
+            (ngModelChange)="saveDescription.set($event)" 
+            placeholder="Describe el propósito de este endpoint..." 
+            class="form-control text-area-control"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" (click)="closeSaveModal()">Cancelar</button>
+        <button class="btn-modal-save" [disabled]="!saveName().trim()" (click)="saveCurrentRequest()">
+          <svg data-p-icon="check" class="icon-xs"></svg>
+          <span>Guardar en Historial</span>
+        </button>
+      </div>
+    </div>
+  </div>
+}

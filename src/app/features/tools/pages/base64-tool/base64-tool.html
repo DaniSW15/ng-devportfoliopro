@@ -1,1 +1,61 @@
-<p>base64-tool works!</p>
+<div class="tool-container">
+  <h2>Codificador / Decodificador Base64 🔠</h2>
+  <p class="subtitle">Codifica texto plano a formato Base64 o decodifica cadenas Base64 a texto de forma segura.</p>
+
+  <div class="tool-card">
+    <div class="option-field">
+      <label for="base64-text">Texto de Entrada</label>
+      <textarea 
+        id="base64-text" 
+        class="w-full p-inputtext font-mono text-sm" 
+        rows="6"
+        placeholder="Ingresa el texto a codificar o decodificar..." 
+        [ngModel]="inputText()"
+        (ngModelChange)="inputText.set($event)">
+      </textarea>
+    </div>
+
+    <div class="flex gap-4 mt-4">
+      <p-button 
+        label="Codificar a Base64" 
+        icon="pi pi-lock" 
+        [loading]="toolFacade.isLoading() && actionType() === 'encode'"
+        (onClick)="onProcess('encode')" 
+        class="flex-1">
+      </p-button>
+
+      <p-button 
+        label="Decodificar de Base64" 
+        icon="pi pi-unlock" 
+        severity="secondary"
+        [loading]="toolFacade.isLoading() && actionType() === 'decode'"
+        (onClick)="onProcess('decode')" 
+        class="flex-1">
+      </p-button>
+    </div>
+
+    @if (toolFacade.error()) {
+      <div class="error-section mt-4">
+        <p-message severity="error" [text]="toolFacade.error()!"></p-message>
+      </div>
+    }
+
+    @if (toolFacade.base64Result(); as result) {
+      <div class="result-section mt-4">
+        <div class="flex justify-between items-center mb-2">
+          <span class="result-label m-0">Resultado ({{ result.action | uppercase }})</span>
+          <p-button 
+            [icon]="copied() ? 'pi pi-check' : 'pi pi-copy'" 
+            [label]="copied() ? 'Copiado!' : 'Copiar'"
+            [severity]="copied() ? 'success' : 'secondary'" 
+            (onClick)="copyResult(result.result)">
+          </p-button>
+        </div>
+
+        <div class="code-block">
+          <pre><code>{{ result.result }}</code></pre>
+        </div>
+      </div>
+    }
+  </div>
+</div>

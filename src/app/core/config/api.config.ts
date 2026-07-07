@@ -22,8 +22,14 @@ export const API_CONFIG = {
   // === TOOLS ENDPOINTS ===
   TOOLS: {
     PASSWORD_GENERATOR: '/tools/password-generator',
-    JWT_DECODER: '/tools/jwt-decoder',
-    BASE64: '/tools/base64',
+    JWT_DECODER: '/jwt-decoder',
+    BASE64: '/tools/base64-tool',
+    JSON_FORMATTER: '/json-formatter',
+    COLOR_PALETTE: '/tools/color-palette',
+    QR_GENERATOR: '/qr-generator',
+    UUID_GENERATOR: '/tools/uuid-generator',
+    TIMESTAMP_CONVERTER: '/tools/timestamp-converter',
+    API_TESTER: '/api-tester',
   },
 
   // === SNIPPETS ENDPOINTS ===
@@ -48,7 +54,7 @@ export const API_CONFIG = {
   // === BILLING ENDPOINTS ===
   BILLING: {
     PLANS: '/billing/plans',
-    CHECKOUT: '/billing/checkout',
-    PORTAL: '/billing/portal',
+    CHECKOUT: '/billing/create-checkout-session',
+    PORTAL: '/billing/create-portal-session',
   },
 } as const;

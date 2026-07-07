@@ -1,62 +1,388 @@
-.login-page {
-	max-width: 420px;
-	margin: 3rem auto;
-	padding: 1.5rem;
-	border: 1px solid #d6d9de;
-	border-radius: 0.75rem;
-	background: #fff;
+.auth-page {
+  display: flex;
+  min-height: 100vh;
+  background: #030712; // Fondo ultra oscuro como en el mockup
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
 }
 
-h1 {
-	margin: 0;
+// ── Left Panel: Visuals & Branding ──
+.auth-visual-side {
+  flex: 1.1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 70% 70%, rgba(168, 85, 247, 0.12) 0%, transparent 60%);
+  border-right: 1px solid rgba(255, 255, 255, 0.03);
+  position: relative;
+
+  @media (max-width: 992px) {
+    display: none; // Ocultar en pantallas medianas y pequeñas
+  }
+
+  .visual-content {
+    max-width: 500px;
+    z-index: 2;
+  }
 }
 
-.subtitle {
-	margin-top: 0.25rem;
-	color: #5f6470;
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+
+  .logo-svg {
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--primary-color, #6366f1);
+    filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
+  }
+
+  .brand-name {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #f8fafc;
+    letter-spacing: -0.03em;
+
+    .highlight {
+      color: var(--primary-color, #6366f1);
+    }
+  }
 }
 
-form {
-	display: grid;
-	gap: 0.65rem;
-	margin-top: 1rem;
+.illustration-container {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 
-label {
-	font-weight: 600;
+.glowing-orb {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+
+  &.purple-orb {
+    background: #a855f7;
+    top: 20%;
+    left: 20%;
+  }
+
+  &.cyan-orb {
+    background: #06b6d4;
+    bottom: 20%;
+    right: 20%;
+  }
 }
 
-input {
-	border: 1px solid #c7ccd4;
-	border-radius: 0.5rem;
-	padding: 0.65rem 0.75rem;
+// ── Network Graphic simulation ──
+.network-graphic {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.05) inset;
+
+  .central-node {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+
+    svg {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  .peripheral-node {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    &.node-1 { top: 10%; left: 10%; }
+    &.node-2 { top: 10%; right: 10%; }
+    &.node-3 { bottom: 10%; left: 50%; transform: translateX(-50%); }
+  }
 }
 
-button {
-	margin-top: 0.4rem;
-	border: none;
-	border-radius: 0.5rem;
-	padding: 0.7rem 0.9rem;
-	font-weight: 600;
-	background: #1f3a8a;
-	color: #fff;
-	cursor: pointer;
+.visual-tagline {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin: 0;
 }
 
-button:disabled {
-	opacity: 0.7;
-	cursor: not-allowed;
+// ── Right Panel: The Card ──
+.auth-card-side {
+  flex: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #030712;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
 }
 
-.error {
-	color: #b91c1c;
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
-.server {
-	margin-top: 1rem;
+.auth-header {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.03em;
+    margin: 0 0 0.5rem 0;
+  }
 }
 
-.ok {
-	margin-top: 1rem;
-	color: #166534;
+.auth-subtitle {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+// ── GitHub OAuth Button ──
+.btn-github {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+
+  &:hover {
+    background: #f1f5f9;
+    transform: translateY(-1px);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+  }
+
+  .github-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+// ── Divider ──
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.75rem 0;
+  color: #64748b;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+// ── Form & Inputs ──
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #94a3b8;
+    letter-spacing: 0.02em;
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .input-icon {
+    position: absolute;
+    left: 1rem;
+    width: 1.15rem;
+    height: 1.15rem;
+    color: #64748b;
+    pointer-events: none;
+    transition: color 0.2s ease;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.85rem 1rem 0.85rem 2.75rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: #475569;
+    }
+
+    &:focus {
+      border-color: #06b6d4; // Cyan glow on focus como en la UI v2
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+      background: rgba(15, 23, 42, 0.8);
+
+      + .input-icon {
+        color: #06b6d4;
+      }
+    }
+  }
+}
+
+.field-error {
+  color: #f87171;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+// ── Submit Button ──
+.btn-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  margin-top: 0.5rem;
+  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); // Gradiente violeta-azul como en mockup v2
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.35);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .icon-sm {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+}
+
+// ── Messages ──
+.auth-error {
+  margin-top: 1rem;
+  padding: 0.85rem 1.25rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 12px;
+  color: #f87171;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+// ── Footer ──
+.auth-footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #94a3b8;
+
+  a {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #8b5cf6;
+      text-decoration: underline;
+    }
+  }
+}
+
+// ── Spin Animation ──
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

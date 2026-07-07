@@ -1,1 +1,110 @@
-<p>snippet-detail works!</p>
+<div class="snippets-container">
+  
+  <!-- Volver al listado -->
+  <div class="mb-4">
+    <a [routerLink]="['/snippets']" class="back-link flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
+      <i class="pi pi-arrow-left"></i>
+      <span>Volver a Mis Snippets</span>
+    </a>
+  </div>
+
+  <!-- Mensaje de Error -->
+  @if (facade.error()) {
+    <div class="mb-4">
+      <p-message severity="error" [text]="facade.error()!"></p-message>
+    </div>
+  }
+
+  @if (facade.isLoading() && !facade.activeSnippet()) {
+    <div class="flex flex-col justify-center items-center p-12 text-slate-400">
+      <i class="pi pi-spin pi-spinner text-4xl mb-3 text-indigo-400"></i>
+      <p>Cargando detalle del snippet...</p>
+    </div>
+  } @else if (facade.activeSnippet(); as snippet) {
+    <!-- Contenedor del Detalle -->
+    <div class="tool-card">
+      <div class="detail-header flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-700/50 pb-5 mb-5">
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <span class="language-badge">{{ snippet.language | uppercase }}</span>
+            <span class="visibility-badge" [ngClass]="snippet.isPublic ? 'public' : 'private'">
+              <i class="pi" [ngClass]="snippet.isPublic ? 'pi-globe' : 'pi-lock'"></i>
+              {{ snippet.isPublic ? 'Público' : 'Privado' }}
+            </span>
+          </div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white m-0">{{ snippet.title }}</h2>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="actions-group flex gap-3 w-full md:w-auto">
+          <p-button 
+            [label]="copied() ? 'Copiado' : 'Copiar Código'" 
+            [icon]="copied() ? 'pi pi-check' : 'pi pi-copy'" 
+            [severity]="copied() ? 'success' : 'secondary'"
+            (onClick)="copyCode(snippet.content)"
+            class="flex-grow md:flex-grow-0">
+          </p-button>
+
+          <p-button 
+            label="Editar" 
+            icon="pi pi-pencil" 
+            severity="secondary"
+            [routerLink]="['/snippets/edit', snippet.id]"
+            class="flex-grow md:flex-grow-0">
+          </p-button>
+
+          <p-button 
+            label="Eliminar" 
+            icon="pi pi-trash" 
+            severity="danger"
+            (onClick)="onDelete(snippet.id)"
+            class="flex-grow md:flex-grow-0">
+          </p-button>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      @if (snippet.description) {
+        <div class="description-section mb-6">
+          <h5 class="section-title text-slate-400 font-bold uppercase text-xs tracking-wider mb-2">Descripción</h5>
+          <p class="text-slate-200 text-sm md:text-base leading-relaxed m-0">{{ snippet.description }}</p>
+        </div>
+      }
+
+      <!-- Bloque de código completo -->
+      <div class="code-editor-block mb-6 relative">
+        <h5 class="section-title text-slate-400 font-bold uppercase text-xs tracking-wider mb-2">Código</h5>
+        <div class="code-wrapper rounded-lg overflow-hidden border border-slate-700/50">
+          <div class="code-header flex justify-between items-center bg-slate-950 px-4 py-2 text-xs text-slate-400 border-b border-slate-700/40">
+            <span class="font-mono">{{ snippet.language }}.code</span>
+            <button (click)="copyCode(snippet.content)" class="hover:text-white transition-colors cursor-pointer">
+              <i class="pi" [ngClass]="copied() ? 'pi-check text-green-400' : 'pi-copy'"></i>
+              <span class="ml-1">{{ copied() ? 'Copiado' : 'Copiar' }}</span>
+            </button>
+          </div>
+          <pre class="code-content m-0 p-4 bg-slate-900/60 overflow-auto"><code class="font-mono text-sm text-slate-100">{{ snippet.content }}</code></pre>
+        </div>
+      </div>
+
+      <!-- Metadatos y Tags -->
+      <div class="metadata-section flex flex-col md:flex-row justify-between gap-4 border-t border-slate-700/40 pt-5 text-xs text-slate-500">
+        <div class="tags-list flex flex-wrap gap-2">
+          @if (snippet.tags && snippet.tags.length > 0) {
+            @for (tag of snippet.tags; track tag) {
+              <span class="tag-badge text-xs">#{{ tag }}</span>
+            }
+          } @else {
+            <span>Sin etiquetas</span>
+          }
+        </div>
+        <div class="dates-info flex flex-col md:items-end gap-1">
+          <span>Creado el: {{ snippet.createdAt | date:'medium' }}</span>
+          @if (snippet.updatedAt !== snippet.createdAt) {
+            <span>Última actualización: {{ snippet.updatedAt | date:'medium' }}</span>
+          }
+        </div>
+      </div>
+
+    </div>
+  }
+</div>

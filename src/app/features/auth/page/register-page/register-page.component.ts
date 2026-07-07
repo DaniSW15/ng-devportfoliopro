@@ -1,20 +1,22 @@
 import { Component, inject, signal } from '@angular/core';
 import { email, form, FormField, FormRoot, minLength, required } from '@angular/forms/signals';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { RegisterDto } from '@core/application/dto/auth.dto';
 import { AuthFacade } from '@features/auth/services/auth.facade';
-import { ButtonModule } from 'primeng/button';
-import { InputGroupModule } from 'primeng/inputgroup';
+import { API_CONFIG } from '@core/config/api.config';
 import { InputTextModule } from 'primeng/inputtext';
-import { MessageModule } from 'primeng/message';
+
+// Icons
+import { Spinner } from '@primeicons/angular/spinner';
 
 @Component({
-  selector: 'app-register-page.component',
-  imports: [FormRoot, FormField,
-    ButtonModule,
-    InputGroupModule,
+  selector: 'app-register-page',
+  imports: [
+    FormRoot,
+    FormField,
+    RouterModule,
     InputTextModule,
-    MessageModule,
+    Spinner,
   ],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss',
@@ -27,24 +29,22 @@ export class RegisterPageComponent {
     name: '',
     password: '',
     githubUsername: '',
-  })
+  });
 
   public readonly registerError = signal<boolean>(false);
   public readonly registerSuccess = signal<boolean>(false);
 
-  public readonly emailError = signal<string>('');
-  public readonly nameError = signal<string>('');
-  public readonly passwordError = signal<string>('');
-  public readonly githubUsernameError = signal<string>('');
+  /** URL directa al endpoint de GitHub OAuth en el backend */
+  readonly githubOAuthUrl = `${API_CONFIG.BASE_URL}${API_CONFIG.AUTH.GITHUB}`;
 
   public readonly registerForm = form<Required<RegisterDto>>(this.registerModel,
     (validators) => {
-      required(validators.email, { message: 'Email is required' });
-        email(validators.email, { message: 'Email is invalid' });
-        required(validators.name, { message: 'Name is required' });
-        required(validators.password, { message: 'Password is required' });
-        minLength(validators.password, 8, { message: 'Password must be at least 8 characters long' });
-        required(validators.githubUsername, { message: 'GitHub username is required' });
+      required(validators.email, { message: 'El email es obligatorio' });
+      email(validators.email, { message: 'El email no es válido' });
+      required(validators.name, { message: 'El nombre es obligatorio' });
+      required(validators.password, { message: 'La contraseña es obligatoria' });
+      minLength(validators.password, 8, { message: 'Mínimo 8 caracteres' });
+      required(validators.githubUsername, { message: 'El usuario de GitHub es obligatorio' });
     },
     {
       submission: {
@@ -59,7 +59,6 @@ export class RegisterPageComponent {
 
     try {
       const result = await this.authFacade.register(this.registerForm().value());
-      console.log('Registration successful:', result);
       this.registerSuccess.set(true);
       this.router.navigate(['/auth/login']);
     } catch (error) {
