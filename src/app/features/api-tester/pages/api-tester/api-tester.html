@@ -107,42 +107,44 @@
             <!-- Headers Tab -->
             @if (activeTab() === 'headers') {
               <div class="headers-tab">
-                <table class="headers-table">
-                  <thead>
-                    <tr>
-                      <th>Key</th>
-                      <th>Value</th>
-                      <th width="40px"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (header of headers(); track $index) {
+                <div class="table-container custom-scrollbar">
+                  <table class="headers-table">
+                    <thead>
                       <tr>
-                        <td>
-                          <input 
-                            type="text" 
-                            [(ngModel)]="header.key" 
-                            placeholder="Header Key" 
-                            class="table-input"
-                          />
-                        </td>
-                        <td>
-                          <input 
-                            type="text" 
-                            [(ngModel)]="header.value" 
-                            placeholder="Header Value" 
-                            class="table-input"
-                          />
-                        </td>
-                        <td>
-                          <button class="btn-remove-row" (click)="removeHeader($index)">
-                            <svg data-p-icon="trash" class="icon-xs"></svg>
-                          </button>
-                        </td>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <th width="40px"></th>
                       </tr>
-                    }
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      @for (header of headers(); track $index) {
+                        <tr>
+                          <td>
+                            <input 
+                              type="text" 
+                              [(ngModel)]="header.key" 
+                              placeholder="Header Key" 
+                              class="table-input"
+                            />
+                          </td>
+                          <td>
+                            <input 
+                              type="text" 
+                              [(ngModel)]="header.value" 
+                              placeholder="Header Value" 
+                              class="table-input"
+                            />
+                          </td>
+                          <td>
+                            <button class="btn-remove-row" (click)="removeHeader($index)">
+                              <svg data-p-icon="trash" class="icon-xs"></svg>
+                            </button>
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
                 <button class="btn-add-row mt-3" (click)="addHeader()">
                   <svg data-p-icon="plus" class="icon-xs"></svg>
                   <span>Agregar Header</span>

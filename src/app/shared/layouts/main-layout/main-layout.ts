@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { RouterModule, RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { AuthFacade } from '@features/auth/services/auth.facade';
 import { ButtonModule } from 'primeng/button';
 import { Home } from '@primeicons/angular/home';
@@ -11,6 +11,7 @@ import { CreditCard } from '@primeicons/angular/credit-card';
 import { File } from '@primeicons/angular/file';
 import { Database } from '@primeicons/angular/database';
 import { SignOut as SignOutIcon } from '@primeicons/angular/sign-out';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-layout',
@@ -32,8 +33,26 @@ import { SignOut as SignOutIcon } from '@primeicons/angular/sign-out';
   styleUrl: './main-layout.scss',
 })
 export class MainLayout {
-  protected readonly isSidebarOpen = true;
+  protected readonly isSidebarOpen = signal<boolean>(false);
   protected readonly authFacade = inject(AuthFacade);
+  private readonly router = inject(Router);
+
+  constructor() {
+    // Cerrar el menú móvil automáticamente tras la navegación a una nueva pantalla
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.isSidebarOpen.set(false);
+    });
+  }
+
+  toggleSidebar(): void {
+    this.isSidebarOpen.update(open => !open);
+  }
+
+  closeSidebar(): void {
+    this.isSidebarOpen.set(false);
+  }
 
   get userEmail(): string {
     return this.authFacade.user()?.email || 'Desarrollador';
@@ -43,3 +62,4 @@ export class MainLayout {
     this.authFacade.logoutRemote();
   }
 }
+

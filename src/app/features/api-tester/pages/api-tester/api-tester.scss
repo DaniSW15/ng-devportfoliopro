@@ -199,10 +199,48 @@
   gap: 1rem;
 }
 
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+  
+  .headers-table {
+    min-width: 450px; // Evita que los inputs se aplasten en pantallas pequeñas
+  }
+}
+
 .url-bar-container {
   display: flex;
   gap: 0.75rem;
   align-items: center;
+
+  @media (max-width: 640px) {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 0.75rem;
+    width: 100%;
+
+    .method-select {
+      grid-column: 1;
+      width: 100% !important;
+    }
+
+    .url-input {
+      grid-column: 2;
+      width: 100% !important;
+    }
+
+    .btn-send {
+      grid-column: 1 / span 2;
+      width: 100% !important;
+      justify-content: center;
+    }
+
+    .btn-save {
+      grid-column: 1 / span 2;
+      width: 100% !important;
+      justify-content: center;
+    }
+  }
 
   .method-select {
     background: rgba(15, 23, 42, 0.6);

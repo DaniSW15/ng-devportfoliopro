@@ -106,4 +106,8 @@ export class SnippetEditor implements OnInit {
       console.error('Error al guardar el snippet', err);
     }
   }
+
+  onCancel(): void {
+    this.router.navigate(['/snippets']);
+  }
 }

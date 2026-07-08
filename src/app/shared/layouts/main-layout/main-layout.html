@@ -1,7 +1,12 @@
 <div class="layout-container">
 
+    <!-- OVERLAY (Cierra el menú móvil al dar clic fuera de la barra) -->
+    @if (isSidebarOpen()) {
+        <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+    }
+
     <!-- SIDEBAR (Barra lateral izquierda) -->
-    <aside class="layout-sidebar">
+    <aside class="layout-sidebar" [class.sidebar-open]="isSidebarOpen()">
         <div class="sidebar-logo">
             <span class="logo-icon">🚀</span>
             <span class="logo-text">DevPortfolio</span>
@@ -94,6 +99,14 @@
         <!-- NAVBAR (Barra superior) -->
         <header class="layout-navbar">
             <div class="navbar-left">
+                <!-- Botón de Hamburguesa Móvil -->
+                <button class="btn-menu-toggle" (click)="toggleSidebar()" title="Menú">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="4" y1="12" x2="20" y2="12"></line>
+                        <line x1="4" y1="6" x2="20" y2="6"></line>
+                        <line x1="4" y1="18" x2="20" y2="18"></line>
+                    </svg>
+                </button>
                 <span class="page-title">Panel de Control</span>
             </div>
         </header>
