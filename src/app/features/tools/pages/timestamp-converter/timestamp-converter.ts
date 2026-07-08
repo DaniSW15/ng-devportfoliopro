@@ -4,10 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { ToolFacade } from '../../service/tool.facade';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
+import { RouterModule } from '@angular/router';
+import {
+  TimestampCurrentResponse,
+  TimestampToDateResponse,
+  DateToTimestampResponse
+} from '@core/interfaces/tools.interface';
+
+/** Tipo unión de todas las respuestas posibles del signal de timestamp */
+type TimestampResult = TimestampToDateResponse | DateToTimestampResponse | TimestampCurrentResponse | null;
 
 @Component({
   selector: 'app-timestamp-converter',
-  imports: [CommonModule, FormsModule, ButtonModule, MessageModule],
+  imports: [CommonModule, FormsModule, ButtonModule, MessageModule, RouterModule],
   templateUrl: './timestamp-converter.html',
   styleUrl: './timestamp-converter.scss',
 })
@@ -27,10 +36,9 @@ export class TimestampConverter implements OnInit {
     try {
       await this.toolFacade.fetchCurrentTimestamp();
       const current = this.toolFacade.timestampResult();
-      if (current && 'timestamp' in current) {
-        const currentData = current as any;
-        this.timestampInput.set(String(currentData.timestamp));
-        this.dateInput.set(currentData.iso);
+      if (current && this.isCurrentResponse(current)) {
+        this.timestampInput.set(String(current.timestamp));
+        this.dateInput.set(current.iso);
       }
     } catch (err) {
       console.error('Error al cargar timestamp actual', err);
@@ -57,32 +65,34 @@ export class TimestampConverter implements OnInit {
     }
   }
 
-  asCurrent(res: any): any {
-    return res;
+  // ── Type Guards tipados ──
+
+  asCurrent(res: TimestampResult): TimestampCurrentResponse {
+    return res as TimestampCurrentResponse;
   }
 
-  asToDate(res: any): any {
-    return res;
+  asToDate(res: TimestampResult): TimestampToDateResponse {
+    return res as TimestampToDateResponse;
   }
 
-  asToTimestamp(res: any): any {
-    return res;
+  asToTimestamp(res: TimestampResult): DateToTimestampResponse {
+    return res as DateToTimestampResponse;
   }
 
-  isToDateResponse(res: any): boolean {
-    return res && 'date' in res && !('utc' in res);
+  isToDateResponse(res: TimestampResult): res is TimestampToDateResponse {
+    return res != null && 'date' in res && !('utc' in res);
   }
 
-  isToDateFullResponse(res: any): boolean {
-    return res && 'date' in res && 'utc' in res;
+  isToDateFullResponse(res: TimestampResult): res is TimestampToDateResponse {
+    return res != null && 'date' in res && 'utc' in res;
   }
 
-  isToTimestampResponse(res: any): boolean {
-    return res && 'timestamp' in res && !('iso' in res);
+  isToTimestampResponse(res: TimestampResult): res is DateToTimestampResponse {
+    return res != null && 'timestamp' in res && !('iso' in res);
   }
 
-  isCurrentResponse(res: any): boolean {
-    return res && 'timestamp' in res && 'iso' in res;
+  isCurrentResponse(res: TimestampResult): res is TimestampCurrentResponse {
+    return res != null && 'timestamp' in res && 'iso' in res;
   }
 
   async copyText(text: string | number): Promise<void> {
@@ -95,3 +105,4 @@ export class TimestampConverter implements OnInit {
     }
   }
 }
+

@@ -31,6 +31,7 @@ import {
   UuidSingleResponse,
   UuidBulkResponse
 } from '@core/interfaces/tools.interface';
+import { parseApiError } from '@core/interceptors/error-handler.interceptor';
 
 @Injectable({
   providedIn: 'root',
@@ -61,159 +62,131 @@ export class ToolFacade {
   // ── Computed ──
   readonly isLoading = computed(() => this.status() === 'loading');
 
+  // ── State Management ──
+  clearState(): void {
+    this.status.set('idle');
+    this.error.set(null);
+    this.passwordResult.set(null);
+    this.jwtResult.set(null);
+    this.jsonResult.set(null);
+    this.paletteResult.set(null);
+    this.base64Result.set(null);
+    this.qrResult.set(null);
+    this.timestampResult.set(null);
+    this.uuidResult.set(null);
+  }
+
+  // ── Error Handling Centralizado ──
+  /**
+   * Ejecuta una operación asíncrona con manejo de estado y errores uniforme.
+   * Elimina la repetición de try/catch/status en cada acción.
+   */
+  private async executeWithErrorHandling<T>(
+    operation: () => Promise<T>,
+    onSuccess: (result: T) => void,
+    fallbackMessage: string
+  ): Promise<void> {
+    this.status.set('loading');
+    this.error.set(null);
+    try {
+      const result = await operation();
+      onSuccess(result);
+      this.status.set('idle');
+    } catch (err: unknown) {
+      this.status.set('error');
+      this.error.set(parseApiError(err, fallbackMessage));
+      throw err;
+    }
+  }
+
   // ── Acciones ──
 
-  async generatePassword(request: PasswordGeneratorRequest): Promise<void> {
-    this.status.set('loading');
-    this.error.set(null);
-    try {
-      const res = await this.generatePasswordUseCase.execute(request);
-      this.passwordResult.set(res);
-      this.status.set('idle');
-    } catch (err: any) {
-      this.status.set('error');
-      this.error.set(err.message || 'Error al generar la contraseña');
-      throw err;
-    }
+  generatePassword(request: PasswordGeneratorRequest): Promise<void> {
+    return this.executeWithErrorHandling(
+      () => this.generatePasswordUseCase.execute(request),
+      (res) => this.passwordResult.set(res),
+      'Error al generar la contraseña'
+    );
   }
 
-  async decodeJwt(request: JwtDecodeRequest): Promise<void> {
-    this.status.set('loading');
-    this.error.set(null);
-    try {
-      const res = await this.decodeJwtUseCase.execute(request);
-      this.jwtResult.set(res);
-      this.status.set('idle');
-    } catch (err: any) {
-      this.status.set('error');
-      this.error.set(err.message || 'Error al decodificar el token JWT');
-      throw err;
-    }
+  decodeJwt(request: JwtDecodeRequest): Promise<void> {
+    return this.executeWithErrorHandling(
+      () => this.decodeJwtUseCase.execute(request),
+      (res) => this.jwtResult.set(res),
+      'Error al decodificar el token JWT'
+    );
   }
 
-  async formatJson(request: JsonFormatterRequest): Promise<void> {
-    this.status.set('loading');
-    this.error.set(null);
-    try {
-      const res = await this.formatJsonUseCase.execute(request);
-      this.jsonResult.set(res);
-      this.status.set('idle');
-    } catch (err: any) {
-      this.status.set('error');
-      this.error.set(err.message || 'Error al formatear JSON');
-      throw err;
-    }
+  formatJson(request: JsonFormatterRequest): Promise<void> {
+    return this.executeWithErrorHandling(
+      () => this.formatJsonUseCase.execute(request),
+      (res) => this.jsonResult.set(res),
+      'Error al formatear JSON'
+    );
   }
 
-  async generatePalette(request: ColorPaletteRequest): Promise<void> {
-    this.status.set('loading');
-    this.error.set(null);
-    try {
-      const res = await this.generatePaletteUseCase.execute(request);
-      this.paletteResult.set(res);
-      this.status.set('idle');
-    } catch (err: any) {
-      this.status.set('error');
-      this.error.set(err.message || 'Error al generar la paleta de colores');
-      throw err;
-    }
+  generatePalette(request: ColorPaletteRequest): Promise<void> {
+    return this.executeWithErrorHandling(
+      () => this.generatePaletteUseCase.execute(request),
+      (res) => this.paletteResult.set(res),
+      'Error al generar la paleta de colores'
+    );
   }
 
-  async encodeDecodeBase64(request: Base64Request): Promise<void> {
-    this.status.set('loading');
-    this.error.set(null);
-    try {
-      const res = await this.base64UseCase.execute(request);
-      this.base64Result.set(res);
-      this.status.set('idle');
-    } catch (err: any) {
-      this.status.set('error');
-      this.error.set(err.message || 'Error al procesar Base64');
-      throw err;
-    }
+  encodeDecodeBase64(request: Base64Request): Promise<void> {
+    return this.executeWithErrorHandling(
+      () => this.base64UseCase.execute(request),
+      (res) => this.base64Result.set(res),
+      'Error al procesar Base64'
+    );
   }
 
-  async generateQr(request: QrGeneratorRequest): Promise<void> {
-    this.status.set('loading');
-    this.error.set(null);
-    try {
-      const res = await this.qrGeneratorUseCase.execute(request);
-      this.qrResult.set(res);
-      this.status.set('idle');
-    } catch (err: any) {
-      this.status.set('error');
-      this.error.set(err.message || 'Error al generar código QR');
-      throw err;
-    }
+  generateQr(request: QrGeneratorRequest): Promise<void> {
+    return this.executeWithErrorHandling(
+      () => this.qrGeneratorUseCase.execute(request),
+      (res) => this.qrResult.set(res),
+      'Error al generar código QR'
+    );
   }
 
-  async fetchCurrentTimestamp(): Promise<void> {
-    this.status.set('loading');
-    this.error.set(null);
-    try {
-      const res = await this.timestampUseCase.getCurrent();
-      this.timestampResult.set(res);
-      this.status.set('idle');
-    } catch (err: any) {
-      this.status.set('error');
-      this.error.set(err.message || 'Error al cargar timestamp actual');
-      throw err;
-    }
+  fetchCurrentTimestamp(): Promise<void> {
+    return this.executeWithErrorHandling(
+      () => this.timestampUseCase.getCurrent(),
+      (res) => this.timestampResult.set(res),
+      'Error al cargar timestamp actual'
+    );
   }
 
-  async convertTimestampToDate(request: TimestampToDateRequest): Promise<void> {
-    this.status.set('loading');
-    this.error.set(null);
-    try {
-      const res = await this.timestampUseCase.toDate(request);
-      this.timestampResult.set(res);
-      this.status.set('idle');
-    } catch (err: any) {
-      this.status.set('error');
-      this.error.set(err.message || 'Error al convertir timestamp a fecha');
-      throw err;
-    }
+  convertTimestampToDate(request: TimestampToDateRequest): Promise<void> {
+    return this.executeWithErrorHandling(
+      () => this.timestampUseCase.toDate(request),
+      (res) => this.timestampResult.set(res),
+      'Error al convertir timestamp a fecha'
+    );
   }
 
-  async convertDateToTimestamp(request: DateToTimestampRequest): Promise<void> {
-    this.status.set('loading');
-    this.error.set(null);
-    try {
-      const res = await this.timestampUseCase.toTimestamp(request);
-      this.timestampResult.set(res);
-      this.status.set('idle');
-    } catch (err: any) {
-      this.status.set('error');
-      this.error.set(err.message || 'Error al convertir fecha a timestamp');
-      throw err;
-    }
+  convertDateToTimestamp(request: DateToTimestampRequest): Promise<void> {
+    return this.executeWithErrorHandling(
+      () => this.timestampUseCase.toTimestamp(request),
+      (res) => this.timestampResult.set(res),
+      'Error al convertir fecha a timestamp'
+    );
   }
 
-  async generateUuid(version: UuidVersion): Promise<void> {
-    this.status.set('loading');
-    this.error.set(null);
-    try {
-      const res = await this.uuidGeneratorUseCase.generate(version);
-      this.uuidResult.set(res);
-      this.status.set('idle');
-    } catch (err: any) {
-      this.status.set('error');
-      this.error.set(err.message || 'Error al generar UUID');
-      throw err;
-    }
+  generateUuid(version: UuidVersion): Promise<void> {
+    return this.executeWithErrorHandling(
+      () => this.uuidGeneratorUseCase.generate(version),
+      (res) => this.uuidResult.set(res),
+      'Error al generar UUID'
+    );
   }
 
-  async generateUuidBulk(count: number, version: UuidVersion): Promise<void> {
-    this.status.set('loading');
-    this.error.set(null);
-    try {
-      const res = await this.uuidGeneratorUseCase.generateBulk(count, version);
-      this.uuidResult.set(res);
-      this.status.set('idle');
-    } catch (err: any) {
-      this.status.set('error');
-      this.error.set(err.message || 'Error al generar UUIDs múltiples');
-      throw err;
-    }
+  generateUuidBulk(count: number, version: UuidVersion): Promise<void> {
+    return this.executeWithErrorHandling(
+      () => this.uuidGeneratorUseCase.generateBulk(count, version),
+      (res) => this.uuidResult.set(res),
+      'Error al generar UUIDs múltiples'
+    );
   }
 }
+

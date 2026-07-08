@@ -1,6 +1,7 @@
 import { inject, Injectable, signal, computed } from '@angular/core';
 import { GetPlansUseCase, CreateCheckoutUseCase, CreatePortalUseCase } from '@core/application/use-cases/billing';
 import { PlansResponse } from '@core/interfaces/billing.interface';
+import { parseApiError } from '@core/interceptors/error-handler.interceptor';
 
 @Injectable({
   providedIn: 'root',
@@ -27,9 +28,9 @@ export class BillingFacade {
       const response = await this.getPlansUseCase.execute();
       this.plans.set(response);
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al cargar los planes de suscripción');
+      this.error.set(parseApiError(err, 'Error al cargar los planes de suscripción'));
     }
   }
 
@@ -44,9 +45,9 @@ export class BillingFacade {
       } else {
         throw new Error('No se generó la URL de checkout de Stripe');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al iniciar el flujo de pago con Stripe');
+      this.error.set(parseApiError(err, 'Error al iniciar el flujo de pago con Stripe'));
       throw err;
     }
   }
@@ -62,10 +63,11 @@ export class BillingFacade {
       } else {
         throw new Error('No se generó la URL del portal de Stripe');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al abrir el portal de facturación');
+      this.error.set(parseApiError(err, 'Error al abrir el portal de facturación'));
       throw err;
     }
   }
 }
+

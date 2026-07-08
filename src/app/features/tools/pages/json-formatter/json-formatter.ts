@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { ToolFacade } from '@features/tools/service/tool.facade';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-json-formatter',
-  imports: [CommonModule, FormsModule, ButtonModule, MessageModule],
+  imports: [CommonModule, FormsModule, ButtonModule, MessageModule, RouterModule],
   templateUrl: './json-formatter.html',
   styleUrl: './json-formatter.scss',
 })

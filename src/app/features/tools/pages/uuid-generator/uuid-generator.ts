@@ -1,21 +1,29 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolFacade } from '../../service/tool.facade';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { CheckboxModule } from 'primeng/checkbox';
-import { UuidVersion } from '@core/interfaces/tools.interface';
+import { UuidVersion, UuidSingleResponse, UuidBulkResponse } from '@core/interfaces/tools.interface';
+
+/** Tipo unión de las respuestas posibles del signal de UUID */
+type UuidResult = UuidSingleResponse | UuidBulkResponse | null;
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-uuid-generator',
-  imports: [CommonModule, FormsModule, ButtonModule, MessageModule, CheckboxModule],
+  imports: [CommonModule, FormsModule, ButtonModule, MessageModule, CheckboxModule, RouterModule],
   templateUrl: './uuid-generator.html',
   styleUrl: './uuid-generator.scss',
 })
-export class UuidGenerator {
+export class UuidGenerator implements OnInit {
   protected readonly toolFacade = inject(ToolFacade);
   readonly Number = Number;
+
+  ngOnInit(): void {
+    this.toolFacade.clearState();
+  }
 
   readonly uuidVersion = signal<UuidVersion>('v4');
   readonly isBulk = signal<boolean>(false);
@@ -36,20 +44,22 @@ export class UuidGenerator {
     }
   }
 
-  isBulkResponse(res: any): boolean {
-    return res && 'uuids' in res;
+  // ── Type Guards tipados ──
+
+  isBulkResponse(res: UuidResult): res is UuidBulkResponse {
+    return res != null && 'uuids' in res;
   }
 
-  isSingleResponse(res: any): boolean {
-    return res && 'uuid' in res;
+  isSingleResponse(res: UuidResult): res is UuidSingleResponse {
+    return res != null && 'uuid' in res;
   }
 
-  asBulk(result: any): any {
-    return result;
+  asBulk(result: UuidResult): UuidBulkResponse {
+    return result as UuidBulkResponse;
   }
 
-  asSingle(result: any): any {
-    return result;
+  asSingle(result: UuidResult): UuidSingleResponse {
+    return result as UuidSingleResponse;
   }
 
   async copySingle(uuid: string, index: number): Promise<void> {

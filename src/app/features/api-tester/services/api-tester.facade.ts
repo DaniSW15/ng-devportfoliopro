@@ -14,6 +14,7 @@ import {
   SaveRequestPayload,
   CollectionPayload,
 } from '@core/interfaces/tools.interface';
+import { parseApiError } from '@core/interceptors/error-handler.interceptor';
 
 @Injectable({
   providedIn: 'root',
@@ -47,9 +48,9 @@ export class ApiTesterFacade {
       this.activeResponse.set(response);
       this.status.set('idle');
       return response;
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al ejecutar la petición');
+      this.error.set(parseApiError(err, 'Error al ejecutar la petición'));
       throw err;
     }
   }
@@ -61,9 +62,9 @@ export class ApiTesterFacade {
       const list = await this.getHistoryUseCase.execute();
       this.history.set(list);
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al cargar el historial');
+      this.error.set(parseApiError(err, 'Error al cargar el historial'));
     }
   }
 
@@ -74,9 +75,9 @@ export class ApiTesterFacade {
       await this.saveRequestUseCase.execute(payload);
       await this.loadHistory();
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al guardar la petición');
+      this.error.set(parseApiError(err, 'Error al guardar la petición'));
       throw err;
     }
   }
@@ -88,9 +89,9 @@ export class ApiTesterFacade {
       await this.deleteHistoryUseCase.execute(id);
       await this.loadHistory();
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al borrar el elemento del historial');
+      this.error.set(parseApiError(err, 'Error al borrar el elemento del historial'));
     }
   }
 
@@ -101,9 +102,9 @@ export class ApiTesterFacade {
       await this.clearHistoryUseCase.execute();
       this.history.set([]);
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al limpiar el historial');
+      this.error.set(parseApiError(err, 'Error al limpiar el historial'));
     }
   }
 
@@ -114,9 +115,9 @@ export class ApiTesterFacade {
       const list = await this.getCollectionsUseCase.execute();
       this.collections.set(list);
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al cargar colecciones');
+      this.error.set(parseApiError(err, 'Error al cargar colecciones'));
     }
   }
 
@@ -131,9 +132,10 @@ export class ApiTesterFacade {
       });
       await this.loadCollections();
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al crear la colección');
+      this.error.set(parseApiError(err, 'Error al crear la colección'));
     }
   }
 }
+

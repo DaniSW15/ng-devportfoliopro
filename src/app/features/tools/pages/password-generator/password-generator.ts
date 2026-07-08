@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolFacade } from '../../service/tool.facade';
@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageModule } from 'primeng/message';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-password-generator',
@@ -19,13 +20,18 @@ import { MessageModule } from 'primeng/message';
     InputTextModule,
     CheckboxModule,
     InputNumberModule,
-    MessageModule
+    MessageModule,
+    RouterModule
   ],
   templateUrl: './password-generator.html',
   styleUrl: './password-generator.scss',
 })
-export class PasswordGenerator {
+export class PasswordGenerator implements OnInit {
   protected readonly toolFacade = inject(ToolFacade);
+
+  ngOnInit(): void {
+    this.toolFacade.clearState();
+  }
 
   // Signals locales para las opciones del generador
   readonly length = signal<number>(16);

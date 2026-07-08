@@ -11,6 +11,7 @@ import {
   ApiKeyResponse,
   ApiKeyStatsResponse
 } from '@core/interfaces/api-key.interface';
+import { parseApiError } from '@core/interceptors/error-handler.interceptor';
 
 @Injectable({
   providedIn: 'root',
@@ -43,9 +44,9 @@ export class ApiKeyFacade {
       // Omit<ApiKeyResponse, 'key'>[] se castea a ApiKeyResponse[] (la key estará vacía/omitida de la lista)
       this.apiKeys.set(response.items as ApiKeyResponse[]);
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al listar las API Keys');
+      this.error.set(parseApiError(err, 'Error al listar las API Keys'));
     }
   }
 
@@ -58,9 +59,9 @@ export class ApiKeyFacade {
       this.newlyCreatedKey.set(key);
       // Recargar lista después de crear
       await this.loadApiKeys();
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al generar la API Key');
+      this.error.set(parseApiError(err, 'Error al generar la API Key'));
       throw err;
     }
   }
@@ -72,9 +73,9 @@ export class ApiKeyFacade {
       await this.revokeUseCase.execute(id);
       // Recargar lista tras revocar
       await this.loadApiKeys();
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al revocar la API Key');
+      this.error.set(parseApiError(err, 'Error al revocar la API Key'));
       throw err;
     }
   }
@@ -86,9 +87,9 @@ export class ApiKeyFacade {
       await this.deleteUseCase.execute(id);
       // Recargar lista tras eliminar
       await this.loadApiKeys();
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al eliminar la API Key');
+      this.error.set(parseApiError(err, 'Error al eliminar la API Key'));
       throw err;
     }
   }
@@ -101,9 +102,10 @@ export class ApiKeyFacade {
       const stats = await this.statsUseCase.execute(id);
       this.selectedKeyStats.set(stats);
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al cargar estadísticas');
+      this.error.set(parseApiError(err, 'Error al cargar estadísticas'));
     }
   }
 }
+

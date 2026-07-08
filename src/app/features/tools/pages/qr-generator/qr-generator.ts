@@ -5,10 +5,11 @@ import { ToolFacade } from '../../service/tool.facade';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { QrFormat } from '@core/interfaces/tools.interface';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-qr-generator',
-  imports: [CommonModule, FormsModule, ButtonModule, MessageModule],
+  imports: [CommonModule, FormsModule, ButtonModule, MessageModule, RouterModule],
   templateUrl: './qr-generator.html',
   styleUrl: './qr-generator.scss',
 })

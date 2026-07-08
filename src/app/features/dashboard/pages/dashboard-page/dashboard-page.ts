@@ -145,7 +145,7 @@ export class DashboardPage implements OnInit {
     },
     {
       title: 'Api Tester',
-      description: 'Cliente HTTP de pruebas REST y GraphQL (tipo Postman).',
+      description: 'Prueba endpoints, inspecciona respuestas y administra colecciones de peticiones.',
       icon: 'pi pi-database',
       route: '/api-tester',
       badge: 'Nuevo',

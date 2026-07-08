@@ -23,6 +23,7 @@
           <input 
             pInputText 
             id="title" 
+            name="title"
             placeholder="ej. Algoritmo de Búsqueda Binaria" 
             [ngModel]="title()" 
             (ngModelChange)="title.set($event)"
@@ -35,6 +36,7 @@
           <label for="language">Lenguaje *</label>
           <select 
             id="language"
+            name="language"
             class="custom-select w-full"
             [ngModel]="language()" 
             (ngModelChange)="language.set($event)">
@@ -65,6 +67,7 @@
         <textarea 
           pTextarea 
           id="description" 
+          name="description"
           rows="3" 
           placeholder="Describe brevemente qué hace este fragmento de código..." 
           [ngModel]="description()" 
@@ -79,6 +82,7 @@
         <textarea 
           pTextarea 
           id="content" 
+          name="content"
           rows="10" 
           placeholder="Pega o escribe tu fragmento de código aquí..." 
           [ngModel]="content()" 
@@ -93,6 +97,7 @@
         <input 
           pInputText 
           id="tags" 
+          name="tags"
           placeholder="ej. frontend, helpers, arrays, utils" 
           [ngModel]="tagsInput()" 
           (ngModelChange)="tagsInput.set($event)"
@@ -100,14 +105,15 @@
       </div>
 
       <!-- Visibilidad -->
-      <div class="flex items-center gap-2 checkbox-field">
+      <div class="checkbox-field checkbox-group">
         <p-checkbox 
           id="isPublic" 
+          name="isPublic"
           [binary]="true" 
           [ngModel]="isPublic()" 
-          (ngModelChange)="isPublic.set($event || false)"
-          label="Hacer este snippet público (otros usuarios podrán verlo)">
+          (ngModelChange)="isPublic.set($event || false)">
         </p-checkbox>
+        <label for="isPublic" class="p-checkbox-label">Hacer este snippet público (otros usuarios podrán verlo)</label>
       </div>
 
       <!-- Botones de Acción -->

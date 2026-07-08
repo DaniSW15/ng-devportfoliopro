@@ -47,7 +47,7 @@ export interface JsonFormatterResponse {
 export type Base64Action = 'encode' | 'decode';
 
 export interface Base64Request {
-    text: string;
+    input: string;
     action: Base64Action;
 }
 

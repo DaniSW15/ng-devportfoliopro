@@ -5,10 +5,11 @@ import { ToolFacade } from '../../service/tool.facade';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { PaletteType } from '@core/interfaces/tools.interface';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-color-palette',
-  imports: [CommonModule, FormsModule, ButtonModule, MessageModule],
+  imports: [CommonModule, FormsModule, ButtonModule, MessageModule, RouterModule],
   templateUrl: './color-palette.html',
   styleUrl: './color-palette.scss',
 })

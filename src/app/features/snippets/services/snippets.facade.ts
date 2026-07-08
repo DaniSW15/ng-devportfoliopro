@@ -9,6 +9,7 @@ import {
 } from '@core/application/use-cases/snippets';
 import { SnippetDto, SnippetResultDto } from '@core/application/dto/snippet.dto';
 import { UpdateSnippetRequest } from '@core/interfaces/tools.interface';
+import { parseApiError } from '@core/interceptors/error-handler.interceptor';
 
 @Injectable({
   providedIn: 'root',
@@ -39,9 +40,9 @@ export class SnippetsFacade {
       const list = await this.getAllSnippetsUseCase.execute();
       this.snippets.set(list);
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al cargar snippets');
+      this.error.set(parseApiError(err, 'Error al cargar snippets'));
     }
   }
 
@@ -52,9 +53,9 @@ export class SnippetsFacade {
       const snippet = await this.getByIdSnippetUseCase.getById(id);
       this.activeSnippet.set(snippet);
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al buscar el snippet');
+      this.error.set(parseApiError(err, 'Error al buscar el snippet'));
     }
   }
 
@@ -64,9 +65,9 @@ export class SnippetsFacade {
     try {
       await this.createSnippetUseCase.create(dto);
       await this.loadAll();
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al crear snippet');
+      this.error.set(parseApiError(err, 'Error al crear snippet'));
       throw err;
     }
   }
@@ -78,9 +79,9 @@ export class SnippetsFacade {
       const updated = await this.putSnippetUseCase.execute(id, dto);
       this.activeSnippet.set(updated);
       await this.loadAll();
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al actualizar snippet');
+      this.error.set(parseApiError(err, 'Error al actualizar snippet'));
       throw err;
     }
   }
@@ -94,9 +95,9 @@ export class SnippetsFacade {
         this.activeSnippet.set(null);
       }
       await this.loadAll();
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error al eliminar snippet');
+      this.error.set(parseApiError(err, 'Error al eliminar snippet'));
       throw err;
     }
   }
@@ -111,9 +112,10 @@ export class SnippetsFacade {
       const list = await this.searchSnippetUseCase.search(query);
       this.snippets.set(list);
       this.status.set('idle');
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.status.set('error');
-      this.error.set(err.message || 'Error en la búsqueda');
+      this.error.set(parseApiError(err, 'Error en la búsqueda'));
     }
   }
 }
+

@@ -34,7 +34,7 @@ export class SnippetList implements OnInit {
   protected readonly facade = inject(SnippetsFacade);
 
   readonly searchQuery = signal<string>('');
-  private searchTimeout: any;
+  private searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit(): void {
     this.facade.loadAll();
