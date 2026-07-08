@@ -1,7 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthFacade } from '@features/auth/services/auth.facade';
+import { ApiKeyFacade } from '@features/api-keys/services/api-key.facade';
+import { SnippetsFacade } from '@features/snippets/services/snippets.facade';
+import { ApiTesterFacade } from '@features/api-tester/services/api-tester.facade';
 import { ButtonModule } from 'primeng/button';
 import { Key as KeyIcon } from '@primeicons/angular/key';
 import { Shield } from '@primeicons/angular/shield';
@@ -46,11 +49,26 @@ interface DashboardToolCard {
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.scss',
 })
-export class DashboardPage {
+export class DashboardPage implements OnInit {
   private readonly authFacade = inject(AuthFacade);
+  private readonly apiKeyFacade = inject(ApiKeyFacade);
+  private readonly snippetsFacade = inject(SnippetsFacade);
+  private readonly apiTesterFacade = inject(ApiTesterFacade);
   private readonly router = inject(Router);
 
   readonly user = this.authFacade.user;
+
+  // Signals computados para estadísticas del HUB
+  readonly apiKeysCount = computed(() => this.apiKeyFacade.apiKeys().length);
+  readonly snippetsCount = computed(() => this.snippetsFacade.snippets().length);
+  readonly apiTesterRequestsCount = computed(() => this.apiTesterFacade.history().length);
+
+  ngOnInit(): void {
+    // Carga inicial asíncrona de datos para las estadísticas
+    this.apiKeyFacade.loadApiKeys();
+    this.snippetsFacade.loadAll();
+    this.apiTesterFacade.loadHistory();
+  }
 
   readonly tools: DashboardToolCard[] = [
     {

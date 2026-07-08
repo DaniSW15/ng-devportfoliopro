@@ -10,6 +10,7 @@ import { Lock } from '@primeicons/angular/lock';
 import { CreditCard } from '@primeicons/angular/credit-card';
 import { File } from '@primeicons/angular/file';
 import { Database } from '@primeicons/angular/database';
+import { SignOut as SignOutIcon } from '@primeicons/angular/sign-out';
 
 @Component({
   selector: 'app-main-layout',
@@ -25,6 +26,7 @@ import { Database } from '@primeicons/angular/database';
     CreditCard,
     File,
     Database,
+    SignOutIcon,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss',

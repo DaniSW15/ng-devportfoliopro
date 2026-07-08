@@ -2,15 +2,44 @@
   max-width: 1200px;
   margin: 1.5rem auto;
   padding: 0 1.5rem;
+  position: relative;
 }
 
+// ── Glowing Background Orbs ──
+.dashboard-orb {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+
+  &.orb-purple {
+    background: #a855f7;
+    top: 5%;
+    left: 10%;
+  }
+
+  &.orb-cyan {
+    background: #06b6d4;
+    bottom: 10%;
+    right: 15%;
+  }
+}
+
+// ── Welcome Banner / Hero Panel ──
 .welcome-banner {
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(15, 23, 42, 0.4) 100%);
   border: 1px solid var(--border-color);
   border-radius: 20px;
-  padding: 2rem;
+  padding: 2.25rem;
   box-shadow: var(--box-shadow-premium);
   backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  position: relative;
+  z-index: 1;
 
   .avatar-icon {
     font-size: 3rem;
@@ -30,44 +59,185 @@
   }
 }
 
+// ── Stats Container ──
+.stats-container {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.stat-box {
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 0.75rem 1.25rem;
+  min-width: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  @media (max-width: 768px) {
+    flex: 1;
+  }
+
+  &:hover {
+    background: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
+
+    .stat-value {
+      color: #818cf8;
+      text-shadow: 0 0 8px rgba(129, 140, 248, 0.3);
+    }
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-color);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+    transition: color 0.2s ease;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+  }
+}
+
+// ── Tools Grid ──
 .tools-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
-  margin-top: 2rem;
+  margin-top: 2.25rem;
+  position: relative;
+  z-index: 1;
 }
 
+// ── Hub Card ──
 .hub-card {
   background: var(--card-bg);
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   box-shadow: var(--box-shadow-premium);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.25s ease,
+              box-shadow 0.25s ease;
+  box-sizing: border-box;
+
+  // Variables de tema por defecto para hover
+  --card-glow: rgba(99, 102, 241, 0.25);
+  --icon-hover-bg: rgba(99, 102, 241, 0.15);
+  --icon-hover-color: #818cf8;
+
+  // Temas específicos por ruta
+  &[data-route="/tools/password-generator"] {
+    --card-glow: rgba(168, 85, 247, 0.25);
+    --icon-hover-bg: rgba(168, 85, 247, 0.12);
+    --icon-hover-color: #c084fc;
+  }
+  &[data-route="/tools/jwt-decoder"] {
+    --card-glow: rgba(249, 115, 22, 0.25);
+    --icon-hover-bg: rgba(249, 115, 22, 0.12);
+    --icon-hover-color: #fb923c;
+  }
+  &[data-route="/tools/json-formatter"] {
+    --card-glow: rgba(6, 182, 212, 0.25);
+    --icon-hover-bg: rgba(6, 182, 212, 0.12);
+    --icon-hover-color: #22d3ee;
+  }
+  &[data-route="/tools/color-palette"] {
+    --card-glow: rgba(244, 63, 94, 0.25);
+    --icon-hover-bg: rgba(244, 63, 94, 0.12);
+    --icon-hover-color: #fb7185;
+  }
+  &[data-route="/tools/base64-tool"] {
+    --card-glow: rgba(59, 130, 246, 0.25);
+    --icon-hover-bg: rgba(59, 130, 246, 0.12);
+    --icon-hover-color: #60a5fa;
+  }
+  &[data-route="/tools/qr-generator"] {
+    --card-glow: rgba(245, 158, 11, 0.25);
+    --icon-hover-bg: rgba(245, 158, 11, 0.12);
+    --icon-hover-color: #fbbf24;
+  }
+  &[data-route="/tools/timestamp-converter"] {
+    --card-glow: rgba(14, 165, 233, 0.25);
+    --icon-hover-bg: rgba(14, 165, 233, 0.12);
+    --icon-hover-color: #38bdf8;
+  }
+  &[data-route="/tools/uuid-generator"] {
+    --card-glow: rgba(234, 179, 8, 0.25);
+    --icon-hover-bg: rgba(234, 179, 8, 0.12);
+    --icon-hover-color: #facc15;
+  }
+  &[data-route="/api-keys"] {
+    --card-glow: rgba(16, 185, 129, 0.25);
+    --icon-hover-bg: rgba(16, 185, 129, 0.12);
+    --icon-hover-color: #34d399;
+  }
+  &[data-route="/billing"] {
+    --card-glow: rgba(99, 102, 241, 0.25);
+    --icon-hover-bg: rgba(99, 102, 241, 0.12);
+    --icon-hover-color: #818cf8;
+  }
+  &[data-route="/snippets"] {
+    --card-glow: rgba(139, 92, 246, 0.25);
+    --icon-hover-bg: rgba(139, 92, 246, 0.12);
+    --icon-hover-color: #a78bfa;
+  }
+  &[data-route="/api-tester"] {
+    --card-glow: rgba(52, 211, 153, 0.25);
+    --icon-hover-bg: rgba(52, 211, 153, 0.12);
+    --icon-hover-color: #6ee7b7;
+  }
 
   &:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    transform: translateY(-5px) scale(1.01);
+    border-color: var(--icon-hover-color);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--card-glow);
 
     .icon-wrapper {
-      background: rgba(99, 102, 241, 0.15);
-      color: #818cf8;
-      transform: scale(1.05);
+      background: var(--icon-hover-bg);
+      color: var(--icon-hover-color);
+      border-color: var(--icon-hover-color);
+      box-shadow: 0 0 12px var(--card-glow);
+    }
+    
+    .hub-footer {
+      color: var(--icon-hover-color) !important;
+      
+      .animate-arrow {
+        transform: translateX(4px);
+      }
     }
   }
 
   .icon-wrapper {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 11px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -76,13 +246,13 @@
     transition: all 0.25s ease;
 
     svg {
-      width: 1.25rem;
-      height: 1.25rem;
+      width: 1.3rem;
+      height: 1.3rem;
     }
   }
 
   .hub-badge {
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 0.6rem;
     border-radius: 6px;
     font-size: 0.7rem;
     font-weight: 700;
@@ -110,16 +280,10 @@
     gap: 0.25rem;
     font-size: 0.75rem;
     font-weight: 700;
-    transition: gap 0.2s ease;
+    transition: color 0.25s ease;
 
-    i {
+    .animate-arrow {
       transition: transform 0.2s ease;
-    }
-  }
-
-  &:hover .hub-footer {
-    i {
-      transform: translateX(3px);
     }
   }
 }

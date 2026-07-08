@@ -1,20 +1,41 @@
 <div class="dashboard-container">
-  <!-- Cabecera de bienvenida -->
+  <!-- Glowing Background Orbs -->
+  <div class="dashboard-orb orb-purple"></div>
+  <div class="dashboard-orb orb-cyan"></div>
+
+  <!-- Cabecera de bienvenida Hero -->
   <div class="welcome-banner mb-8">
-    <div class="flex items-center gap-4">
-      <span class="avatar-icon">💻</span>
-      <div>
-        <h2>¡Te damos la bienvenida a DevPortfolio Pro!</h2>
-        <p class="subtitle m-0">Accede rápidamente a tus herramientas de desarrollo favoritas y administra tus
-          credenciales.</p>
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div class="flex items-center gap-4">
+        <span class="avatar-icon">💻</span>
+        <div>
+          <h2>¡Hola de nuevo, {{ user()?.name || 'Developer' }}! 🚀</h2>
+          <p class="subtitle m-0">Accede rápidamente a tus herramientas de desarrollo favoritas y administra tus credenciales.</p>
+        </div>
+      </div>
+      
+      <!-- Stats Container (Glassmorphic panels) -->
+      <div class="stats-container">
+        <div class="stat-box" (click)="onNavigate('/api-keys')">
+          <span class="stat-value">{{ apiKeysCount() }}</span>
+          <span class="stat-label">API Keys Activas</span>
+        </div>
+        <div class="stat-box" (click)="onNavigate('/snippets')">
+          <span class="stat-value">{{ snippetsCount() }}</span>
+          <span class="stat-label">Snippets Guardados</span>
+        </div>
+        <div class="stat-box" (click)="onNavigate('/api-tester')">
+          <span class="stat-value">{{ apiTesterRequestsCount() }}</span>
+          <span class="stat-label">Peticiones HTTP</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Rejilla del HUB de herramientas -->
+  <!-- Rejilla del HUB de herramientas con colores de hover únicos -->
   <div class="tools-grid">
     @for (tool of tools; track tool.title) {
-    <div class="hub-card" (click)="onNavigate(tool.route)">
+    <div class="hub-card" [attr.data-route]="tool.route" (click)="onNavigate(tool.route)">
 
       <div class="hub-header flex justify-between items-start mb-4">
         <div class="icon-wrapper">
@@ -46,7 +67,7 @@
 
       <div class="hub-footer mt-auto flex items-center gap-1 text-xs font-bold text-indigo-400">
         <span>Abrir herramienta</span>
-        <i class="pi pi-arrow-right"></i>
+        <i class="pi pi-arrow-right animate-arrow"></i>
       </div>
     </div>
     }

@@ -58,7 +58,7 @@ export class RegisterPageComponent {
     this.registerSuccess.set(false);
 
     try {
-      const result = await this.authFacade.register(this.registerForm().value());
+      await this.authFacade.register(this.registerForm().value());
       this.registerSuccess.set(true);
       this.router.navigate(['/auth/login']);
     } catch (error) {

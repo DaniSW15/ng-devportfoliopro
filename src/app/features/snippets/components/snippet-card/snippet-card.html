@@ -1,7 +1,7 @@
 <div class="snippet-card-wrapper" [routerLink]="['/snippets', snippet().id]">
-  <div class="card-header flex justify-between items-start mb-3">
+  <div class="card-header flex justify-between items-start">
     <div class="title-area">
-      <h4 class="snippet-title text-lg font-bold text-white mb-1">{{ snippet().title }}</h4>
+      <h4 class="snippet-title">{{ snippet().title }}</h4>
       <span class="language-badge">{{ snippet().language | uppercase }}</span>
     </div>
     
@@ -14,33 +14,33 @@
   </div>
 
   @if (snippet().description) {
-    <p class="snippet-description text-sm text-slate-400 mb-4 line-clamp-2">
+    <p class="snippet-description">
       {{ snippet().description }}
     </p>
   } @else {
-    <p class="snippet-description text-sm text-slate-500 italic mb-4">
+    <p class="snippet-description placeholder">
       Sin descripción proporcionada.
     </p>
   }
 
   <!-- Vista previa corta del código -->
-  <div class="code-preview mb-4">
+  <div class="code-preview">
     <pre><code>{{ snippet().content }}</code></pre>
   </div>
 
   <!-- Footer de la tarjeta: Tags y Botones -->
-  <div class="card-footer flex justify-between items-center border-t border-slate-700/40 pt-3 mt-auto">
-    <div class="tags-area flex flex-wrap gap-1">
+  <div class="card-footer">
+    <div class="tags-area">
       @if (snippet().tags && snippet().tags.length > 0) {
         @for (tag of snippet().tags; track tag) {
           <span class="tag-badge">#{{ tag }}</span>
         }
       } @else {
-        <span class="no-tags text-xs text-slate-600">Sin etiquetas</span>
+        <span class="no-tags">Sin etiquetas</span>
       }
     </div>
-
-    <div class="actions-area flex gap-2">
+ 
+    <div class="actions-area">
       <p-button 
         [icon]="copied() ? 'pi pi-check' : 'pi pi-copy'" 
         [severity]="copied() ? 'success' : 'secondary'"

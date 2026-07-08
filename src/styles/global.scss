@@ -155,3 +155,77 @@ label.p-checkbox-label {
     transform: translateY(0);
   }
 }
+
+// ── Code Block Shared Component ──
+.code-block {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  position: relative;
+  
+  pre {
+    margin: 0;
+    font-family: 'Fira Code', 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+    color: var(--text-color);
+    line-height: 1.5;
+    
+    code {
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  }
+}
+
+// ── Flex Layout Utilities ──
+.flex {
+  display: flex;
+}
+
+.flex-1 {
+  flex: 1;
+  
+  ::ng-deep .p-button {
+    width: 100% !important;
+  }
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+// ── Icon Sizing Utilities ──
+.icon-sm {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.icon-xs {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.icon-lg {
+  width: 2rem;
+  height: 2rem;
+}
+
+

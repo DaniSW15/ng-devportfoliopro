@@ -16,7 +16,9 @@
 
   @if (facade.error()) {
     <div class="mb-6 flex justify-center">
-      <p-message severity="error" [text]="facade.error()!"></p-message>
+      <p-message severity="error">
+          {{ facade.error()! }}
+      </p-message>
     </div>
   }
 

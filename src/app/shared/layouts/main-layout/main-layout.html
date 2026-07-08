@@ -7,48 +7,85 @@
             <span class="logo-text">DevPortfolio</span>
         </div>
 
-        <nav class="sidebar-nav">
-            <!-- Links de navegación con estado activo -->
-            <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-                <svg data-p-icon="home"></svg>
-                <span>Dashboard</span>
-            </a>
+        <div class="sidebar-menu-wrapper custom-scrollbar">
+            <!-- CATEGORY: GENERAL -->
+            <div class="nav-category">
+                <span class="category-title">General</span>
+                <nav class="sidebar-nav">
+                    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+                        <svg data-p-icon="home"></svg>
+                        <span>Dashboard</span>
+                    </a>
+                </nav>
+            </div>
 
-            <a routerLink="/tools/password-generator" routerLinkActive="active" class="nav-item">
-                <svg data-p-icon="key"></svg>
-                <span>Generador de Claves</span>
-            </a>
+            <!-- CATEGORY: TOOLS -->
+            <div class="nav-category">
+                <span class="category-title">Herramientas</span>
+                <nav class="sidebar-nav">
+                    <a routerLink="/tools/password-generator" routerLinkActive="active" class="nav-item">
+                        <svg data-p-icon="key"></svg>
+                        <span>Generador de Claves</span>
+                    </a>
 
-            <a routerLink="/tools/jwt-decoder" routerLinkActive="active" class="nav-item">
-                <svg data-p-icon="shield"></svg>
-                <span>Decodificador JWT</span>
-            </a>
+                    <a routerLink="/tools/jwt-decoder" routerLinkActive="active" class="nav-item">
+                        <svg data-p-icon="shield"></svg>
+                        <span>Decodificador JWT</span>
+                    </a>
 
-            <a routerLink="/tools/json-formatter" routerLinkActive="active" class="nav-item">
-                <svg data-p-icon="code"></svg>
-                <span>Formateador JSON</span>
-            </a>
+                    <a routerLink="/tools/json-formatter" routerLinkActive="active" class="nav-item">
+                        <svg data-p-icon="code"></svg>
+                        <span>Formateador JSON</span>
+                    </a>
 
-            <a routerLink="/api-keys" routerLinkActive="active" class="nav-item">
-                <svg data-p-icon="lock"></svg>
-                <span>API Keys</span>
-            </a>
+                    <a routerLink="/snippets" routerLinkActive="active" class="nav-item">
+                        <svg data-p-icon="file"></svg>
+                        <span>Mis Snippets</span>
+                    </a>
 
-            <a routerLink="/billing" routerLinkActive="active" class="nav-item">
-                <svg data-p-icon="credit-card"></svg>
-                <span>Suscripciones</span>
-            </a>
+                    <a routerLink="/api-tester" routerLinkActive="active" class="nav-item">
+                        <svg data-p-icon="database"></svg>
+                        <span>Api Tester</span>
+                    </a>
+                </nav>
+            </div>
 
-            <a routerLink="/snippets" routerLinkActive="active" class="nav-item">
-                <svg data-p-icon="file"></svg>
-                <span>Mis Snippets</span>
-            </a>
+            <!-- CATEGORY: MANAGEMENT -->
+            <div class="nav-category">
+                <span class="category-title">Gestión</span>
+                <nav class="sidebar-nav">
+                    <a routerLink="/api-keys" routerLinkActive="active" class="nav-item">
+                        <svg data-p-icon="lock"></svg>
+                        <span>API Keys</span>
+                    </a>
 
-            <a routerLink="/api-tester" routerLinkActive="active" class="nav-item">
-                <svg data-p-icon="database"></svg>
-                <span>Api Tester</span>
-            </a>
-        </nav>
+                    <a routerLink="/billing" routerLinkActive="active" class="nav-item">
+                        <svg data-p-icon="credit-card"></svg>
+                        <span>Suscripciones</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Tarjeta de usuario en el footer del Sidebar -->
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="avatar-wrapper">
+                    @if (authFacade.user()?.avatarUrl; as url) {
+                        <img [src]="url" alt="Avatar" class="user-avatar" />
+                    } @else {
+                        <span class="avatar-placeholder">{{ (authFacade.user()?.name || 'D').charAt(0).toUpperCase() }}</span>
+                    }
+                </div>
+                <div class="user-info">
+                    <span class="user-name">{{ authFacade.user()?.name || 'Desarrollador' }}</span>
+                    <span class="user-email">{{ authFacade.user()?.email }}</span>
+                </div>
+                <button class="btn-logout" (click)="logout()" title="Cerrar Sesión">
+                    <svg data-p-icon="sign-out"></svg>
+                </button>
+            </div>
+        </div>
     </aside>
 
     <!-- CONTENEDOR PRINCIPAL (Derecha) -->
@@ -57,19 +94,12 @@
         <!-- NAVBAR (Barra superior) -->
         <header class="layout-navbar">
             <div class="navbar-left">
-                <span class="welcome-text">¡Hola, <strong>{{ userEmail }}</strong>! 👋</span>
-            </div>
-
-            <div class="navbar-right">
-                <p-button label="Cerrar Sesión" icon="pi pi-sign-out" severity="danger" [text]="true"
-                    (onClick)="logout()">
-                </p-button>
+                <span class="page-title">Panel de Control</span>
             </div>
         </header>
 
         <!-- ÁREA DE CONTENIDO -->
         <main class="layout-content">
-            <!-- Aquí Angular inyectará el componente de la página activa -->
             <router-outlet></router-outlet>
         </main>
 

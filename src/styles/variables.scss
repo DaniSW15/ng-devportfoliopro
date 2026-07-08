@@ -6,22 +6,22 @@
   --primary-color-hover: var(--p-primary-hover-color, #4f46e5);
   
   // Background & Surfaces
-  --bg-color: #0f172a; // Slate 900
-  --card-bg: rgba(30, 41, 59, 0.7); // Slate 800 con transparencia
-  --surface-ground: #0b0f19;
+  --bg-color: #030712; // Ultra oscuro premium
+  --card-bg: rgba(17, 24, 39, 0.55); // Gray 900 translúcido
+  --surface-ground: #020617;
   
   // Borders
-  --border-color: rgba(255, 255, 255, 0.08);
+  --border-color: rgba(255, 255, 255, 0.05);
   --border-color-focus: var(--primary-color);
   
   // Text Colors
   --text-color: #f8fafc; // Slate 50
   --text-secondary: #94a3b8; // Slate 400
-  --text-muted: #64748b; // Slate 500
+  --text-muted: #4b5563; // Gray 600
   
   // Glassmorphism
-  --backdrop-blur: blur(12px);
-  --box-shadow-premium: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --backdrop-blur: blur(16px);
+  --box-shadow-premium: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
 // Opcional: Tema claro en caso de que se necesite

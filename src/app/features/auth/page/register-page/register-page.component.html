@@ -88,7 +88,7 @@
                 autocomplete="email"
               />
             </div>
-            @if (registerForm.email().invalid()) {
+            @if (registerForm.email().invalid() && registerForm.email().touched()) {
               <small class="field-error">
                 @for (error of registerForm.email().errors(); track error) {
                   <span>{{ error.message }}</span>
@@ -114,7 +114,7 @@
                 autocomplete="name"
               />
             </div>
-            @if (registerForm.name().invalid()) {
+            @if (registerForm.name().invalid() && registerForm.name().touched()) {
               <small class="field-error">
                 @for (error of registerForm.name().errors(); track error) {
                   <span>{{ error.message }}</span>
@@ -140,7 +140,7 @@
                 autocomplete="new-password"
               />
             </div>
-            @if (registerForm.password().invalid()) {
+            @if (registerForm.password().invalid() && registerForm.password().touched()) {
               <small class="field-error">
                 @for (error of registerForm.password().errors(); track error) {
                   <span>{{ error.message }}</span>
@@ -165,7 +165,7 @@
                 autocomplete="username"
               />
             </div>
-            @if (registerForm.githubUsername().invalid()) {
+            @if (registerForm.githubUsername().invalid() && registerForm.githubUsername().touched()) {
               <small class="field-error">
                 @for (error of registerForm.githubUsername().errors(); track error) {
                   <span>{{ error.message }}</span>

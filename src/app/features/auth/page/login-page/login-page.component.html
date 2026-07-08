@@ -55,7 +55,7 @@
       </div>
 
       <!-- Email/Password Form -->
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="auth-form">
+      <form [formRoot]="loginForm" class="auth-form">
         <div class="form-field">
           <label for="email">Dirección de Email</label>
           <div class="input-wrapper">
@@ -64,18 +64,20 @@
               <polyline points="22,6 12,13 2,6"></polyline>
             </svg>
             <input
+              pInputText
               id="email"
               type="email"
-              formControlName="email"
+              [formField]="loginForm.email"
               placeholder="user@email.com"
               autocomplete="email"
             />
           </div>
-          @if (hasError('email', 'required')) {
-            <small class="field-error">El email es obligatorio.</small>
-          }
-          @if (hasError('email', 'email')) {
-            <small class="field-error">Formato de email inválido.</small>
+          @if (loginForm.email().invalid() && loginForm.email().touched()) {
+            <small class="field-error">
+              @for (error of loginForm.email().errors(); track error) {
+                <span>{{ error.message }}</span>
+              }
+            </small>
           }
         </div>
 
@@ -87,22 +89,24 @@
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
             <input
+              pInputText
               id="password"
               type="password"
-              formControlName="password"
+              [formField]="loginForm.password"
               placeholder="••••••••"
               autocomplete="current-password"
             />
           </div>
-          @if (hasError('password', 'required')) {
-            <small class="field-error">La contraseña es obligatoria.</small>
-          }
-          @if (hasError('password', 'minlength')) {
-            <small class="field-error">Mínimo 8 caracteres.</small>
+          @if (loginForm.password().invalid() && loginForm.password().touched()) {
+            <small class="field-error">
+              @for (error of loginForm.password().errors(); track error) {
+                <span>{{ error.message }}</span>
+              }
+            </small>
           }
         </div>
 
-        <button type="submit" class="btn-submit" [disabled]="form.invalid || authFacade.isLoading()">
+        <button type="submit" class="btn-submit" [disabled]="loginForm().invalid() || authFacade.isLoading()">
           @if (authFacade.isLoading()) {
             <svg data-p-icon="spinner" class="animate-spin icon-sm"></svg>
             <span>Ingresando...</span>
